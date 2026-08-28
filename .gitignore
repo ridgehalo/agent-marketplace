@@ -1,0 +1,9 @@
+__pycache__/
+.pycache/
+*.py[cod]
+.DS_Store
+validator-venv/
+claude-config/
+claude-config-full/
+.coverage
+coverage.xml

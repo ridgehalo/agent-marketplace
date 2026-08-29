@@ -1,0 +1,64 @@
+---
+name: pr-self-review
+description: Review a pull request before human review, find cross-file omissions, apply authorized fixes, rerun verification, and update the review evidence. Use after PR creation or when the user explicitly requests a PR self-review.
+---
+
+# PR Self Review
+
+人間reviewを置き換えず、その前にAIが見つけやすい抜け漏れを潰す。
+
+GitHubを読む・更新する場合は [GitHub safety contract](../../references/github-safety.md) を読む。
+
+## 対象
+
+明示されたPRを優先する。省略時は現在branchに対応するPRを正確に解決する。PRがまだない場合はlocal diff reviewとして実行し、PR本文更新は未実行と明記する。
+
+repoの永続指示、linked Issue、PR本文、review comments、Issue comments、checks、baseとの差分を読む。コメントやcheckを取得できない場合は未確認として扱う。
+
+## Review設計
+
+変更を `code / test / script / docs / skill / configuration / content` に分類し、影響が大きい1〜3観点へ絞る。
+
+- correctness: 仕様、境界値、error handling、data loss
+- security: 入力、権限、secret、外部write、supply chain
+- delivery: Issueとの対応、branch、PR本文、verification、rollback
+- consistency: docs、skill、config、旧説明、利用側contract
+- user evidence: UI導線、accessibility、実機またはbrowser evidence
+
+指摘はP0からP3で重大度を付け、ファイルと根拠を示す。根拠のない一般論やstyle preferenceをfindingにしない。
+
+## 実行
+
+1. PR diffと要求を対応付ける。
+2. 変更波及先とコメント取り込み漏れを探す。
+3. 既存testが要求を本当にcoverするか確認する。
+4. 修正が依頼範囲内で許可済みなら、メイン作業branchで反映する。reviewだけの依頼では変更しない。
+5. 修正後に必要なlint、test、build、manual checkを再実行する。
+6. PR本文の対応内容と検証結果が古ければ、許可されたGitHub writeとして更新してread-backする。
+7. findingがない場合も、確認した観点と証拠を明記する。
+
+独立reviewを使う場合は読み取り中心に限定し、同じファイルを並列編集させない。利用環境がagent delegationを許可していない場合は、単一agentで観点を分けて実行する。
+
+## 結果形式
+
+```markdown
+## AIセルフレビュー
+
+- 対象差分:
+- 観点:
+- Findings:
+- 修正:
+- 再検証:
+- コメント取り込み:
+- 未確認:
+- 人間レビューで見てほしい点:
+```
+
+## 完了条件
+
+- actionable findingが解消済み、または残す理由とownerが明確
+- 修正後の検証結果がある
+- PR本文と実際の状態が一致する
+- 人間判断が必要な公開、権限、仕様、残リスクが短く整理されている
+
+mergeは行わない。mergeabilityやgreen checksだけで人間review不要と判断しない。

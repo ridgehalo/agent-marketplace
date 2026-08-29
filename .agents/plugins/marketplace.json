@@ -1,0 +1,20 @@
+{
+  "name": "ridgehalo",
+  "interface": {
+    "displayName": "RidgeHalo Agent Marketplace"
+  },
+  "plugins": [
+    {
+      "name": "engineering-delivery",
+      "source": {
+        "source": "local",
+        "path": "./plugins/engineering-delivery"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

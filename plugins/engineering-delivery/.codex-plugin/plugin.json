@@ -1,0 +1,28 @@
+{
+  "name": "engineering-delivery",
+  "version": "0.1.0",
+  "description": "Portable Issue-to-PR delivery, self-review, review loops, and UI evidence workflows.",
+  "author": {
+    "name": "RidgeHalo",
+    "url": "https://github.com/ridgehalo"
+  },
+  "homepage": "https://github.com/ridgehalo/agent-marketplace",
+  "repository": "https://github.com/ridgehalo/agent-marketplace",
+  "license": "Apache-2.0",
+  "keywords": ["delivery", "github", "pull-request", "review", "evidence"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Engineering Delivery",
+    "shortDescription": "Issueから検証済みPRまでを安全に進めます。",
+    "longDescription": "Issue-to-PR、PRセルフレビュー、追加精査、UI証跡取得を、リポジトリ固有ポリシーを尊重しながら実行します。",
+    "developerName": "RidgeHalo",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Write"],
+    "websiteURL": "https://github.com/ridgehalo/agent-marketplace",
+    "defaultPrompt": [
+      "このIssueを検証済みのPRまで進めてください。",
+      "現在のPRをセルフレビューしてください。",
+      "このUI変更のDev体験証跡を取得してください。"
+    ]
+  }
+}

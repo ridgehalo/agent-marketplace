@@ -1,0 +1,15 @@
+{
+  "kind": "consumerProfile",
+  "expectedError": "enabledContracts are not registered",
+  "payload": {
+    "profileId": "unknown-contract-consumer",
+    "contractVersion": "0.1.0",
+    "contractDigest": "31151b5aa90239be684e059e816835fb2e5e7abcec9de91c8239db9e292b4490",
+    "trustDomain": "product",
+    "deliveryStream": "unknown-contract",
+    "enabledContracts": ["doesNotExist"],
+    "externalProjectionMode": "read-only",
+    "stateStoreOwnership": "consumer",
+    "humanGates": ["merge"]
+  }
+}

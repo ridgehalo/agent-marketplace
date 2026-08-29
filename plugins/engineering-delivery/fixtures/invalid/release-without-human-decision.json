@@ -1,0 +1,32 @@
+{
+  "kind": "deliveryManifest",
+  "expectedError": "humanDecision must be approved",
+  "payload": {
+    "workItem": "work-item-unsafe-release",
+    "baseRevision": "base-001",
+    "headRevision": "head-001",
+    "risk": "low",
+    "reviewerCount": 0,
+    "gates": {
+      "plan": "passed",
+      "build": "passed",
+      "verify": "passed",
+      "release": "passed"
+    },
+    "testIntent": {
+      "core": [],
+      "shell": [],
+      "unit": [],
+      "integration": [],
+      "e2e": [],
+      "guards": ["production guard"]
+    },
+    "evidence": [
+      {
+        "type": "local-test",
+        "status": "passed",
+        "source": "unit test"
+      }
+    ]
+  }
+}

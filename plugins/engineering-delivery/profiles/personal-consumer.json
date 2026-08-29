@@ -1,0 +1,17 @@
+{
+  "profileId": "personal-control-plane",
+  "contractVersion": "0.1.0",
+  "contractDigest": "31151b5aa90239be684e059e816835fb2e5e7abcec9de91c8239db9e292b4490",
+  "trustDomain": "personal",
+  "deliveryStream": "personal-delivery",
+  "enabledContracts": [
+    "externalWorkItemRef",
+    "promotionBundle",
+    "contextAssemblyManifest",
+    "deliveryEvent",
+    "deliveryManifest"
+  ],
+  "externalProjectionMode": "read-only",
+  "stateStoreOwnership": "consumer",
+  "humanGates": ["promotion", "merge", "release", "permissions"]
+}

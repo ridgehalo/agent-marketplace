@@ -23,6 +23,8 @@ Issue本文から次を取り出す。
 - relationshipと既存PR
 - 要求ごとの検証証拠
 
+plugin内に `contracts/manifest.json` がある場合は、利用repositoryの規約を上書きせず、公開contract version、risk routing、Evidence typeを解決する。Issue、Plan、Test Intent、Reviewer、PR Evidenceの雛形は `templates/` を使い、consumer固有値を公開coreへ書き戻さない。
+
 chat上の調査結果だけで完了としない。IssueがPRまでの実装を求めるなら、branch、変更、検証、commit、push、PR作成、read-backまでが完了条件になる。
 
 ## 着手判断

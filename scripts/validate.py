@@ -222,6 +222,14 @@ def validate_repository(root: Path = ROOT) -> list[str]:
                 errors.append(f"bearer credential found in {path.relative_to(ROOT)}")
             if TODO_MARKER in text:
                 errors.append(f"unfinished placeholder found in {path.relative_to(ROOT)}")
+
+        sys.path.insert(0, str(ROOT / "scripts"))
+        from contracts import validate_contracts
+
+        errors.extend(
+            f"engineering-delivery contract: {error}"
+            for error in validate_contracts(ROOT)
+        )
     finally:
         ROOT = original_root
     return errors

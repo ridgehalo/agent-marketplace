@@ -1,0 +1,15 @@
+{
+  "kind": "promotionBundle",
+  "expectedError": "allowedFields",
+  "payload": {
+    "approvalId": "approval-001",
+    "approvedAt": "2026-08-29T00:00:00Z",
+    "targetKind": "issue",
+    "allowedFields": ["title"],
+    "redactionClass": "internal",
+    "payload": {
+      "title": "Example outcome",
+      "privateReasoning": "must not be promoted"
+    }
+  }
+}

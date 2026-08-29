@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ridgehalo.dev/schemas/consumer-profile.schema.json",
+  "title": "ConsumerProfile",
+  "type": "object",
+  "required": [
+    "profileId",
+    "contractVersion",
+    "contractDigest",
+    "trustDomain",
+    "deliveryStream",
+    "enabledContracts",
+    "externalProjectionMode",
+    "stateStoreOwnership",
+    "humanGates"
+  ],
+  "properties": {
+    "profileId": {"type": "string", "minLength": 1},
+    "contractVersion": {"type": "string", "minLength": 1},
+    "contractDigest": {"type": "string", "minLength": 64},
+    "trustDomain": {"type": "string", "enum": ["personal", "product"]},
+    "deliveryStream": {"type": "string", "minLength": 1},
+    "enabledContracts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "externalProjectionMode": {"type": "string", "enum": ["read-only"]},
+    "stateStoreOwnership": {"type": "string", "enum": ["consumer"]},
+    "humanGates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    }
+  },
+  "additionalProperties": false
+}

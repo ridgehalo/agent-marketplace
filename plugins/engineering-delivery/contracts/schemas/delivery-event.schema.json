@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ridgehalo.dev/schemas/delivery-event.schema.json",
+  "title": "DeliveryEvent",
+  "type": "object",
+  "required": [
+    "eventId",
+    "workItem",
+    "stage",
+    "occurredAt",
+    "sourceRevision",
+    "evidenceRef"
+  ],
+  "properties": {
+    "eventId": {"type": "string", "minLength": 1},
+    "workItem": {"type": "string", "minLength": 1},
+    "stage": {"type": "string", "enum": ["plan", "build", "verify", "release"]},
+    "occurredAt": {"type": "string", "minLength": 1},
+    "sourceRevision": {"type": "string", "minLength": 1},
+    "evidenceRef": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}

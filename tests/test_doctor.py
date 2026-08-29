@@ -27,6 +27,26 @@ class DoctorTest(unittest.TestCase):
         results = doctor.source_checks(ROOT, ["engineering-delivery"])
         self.assertTrue(all(item["status"] == "pass" for item in results), results)
 
+    def test_consumer_profile_pin_is_read_back(self) -> None:
+        profile = ROOT / "plugins/engineering-delivery/profiles/personal-consumer.json"
+        results = doctor.profile_checks(ROOT, [profile])
+        self.assertEqual(results[0]["status"], "pass", results)
+        self.assertIn("contractVersion=0.1.0", results[0]["detail"])
+        self.assertIn("contractDigest=", results[0]["detail"])
+        self.assertIn("contextLock=", results[0]["detail"])
+
+    def test_stale_consumer_profile_pin_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            profile = Path(directory) / "profile.json"
+            source = ROOT / "plugins/engineering-delivery/profiles/personal-consumer.json"
+            payload = json.loads(source.read_text(encoding="utf-8"))
+            payload["contractVersion"] = "0.0.0"
+            profile.write_text(json.dumps(payload), encoding="utf-8")
+
+            results = doctor.profile_checks(ROOT, [profile])
+        self.assertEqual(results[0]["status"], "fail", results)
+        self.assertIn("contractVersion must match", results[0]["detail"])
+
     def test_fake_platforms_are_read_back(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             bin_dir = Path(directory)
@@ -36,7 +56,7 @@ class DoctorTest(unittest.TestCase):
                 """
                 import sys
                 if sys.argv[1:] == ["plugin", "list"]:
-                    print("engineering-delivery@ridgehalo 0.1.0")
+                    print("engineering-delivery@ridgehalo 0.2.0")
                     raise SystemExit(0)
                 raise SystemExit(2)
                 """,
@@ -54,7 +74,7 @@ class DoctorTest(unittest.TestCase):
                 if args == ["plugin", "list", "--json"]:
                     print(json.dumps([{{
                         "id": "engineering-delivery@ridgehalo",
-                        "version": "0.1.0",
+                        "version": "0.2.0",
                         "scope": "user",
                         "enabled": True
                     }}]))
@@ -72,7 +92,7 @@ class DoctorTest(unittest.TestCase):
     def test_missing_cli_is_unverified(self) -> None:
         with patch("doctor.shutil.which", return_value=None):
             result = doctor.codex_checks(
-                ["engineering-delivery"], {"engineering-delivery": "0.1.0"}
+                ["engineering-delivery"], {"engineering-delivery": "0.2.0"}
             )
         self.assertEqual(result[0]["status"], "unverified")
 
@@ -94,7 +114,7 @@ class DoctorTest(unittest.TestCase):
             path = f"{bin_dir}:{os.environ.get('PATH', '')}"
             with patch.dict(os.environ, {"PATH": path}, clear=False):
                 result = doctor.codex_checks(
-                    ["engineering-delivery"], {"engineering-delivery": "0.1.0"}
+                    ["engineering-delivery"], {"engineering-delivery": "0.2.0"}
                 )
             plugin_check = next(
                 item for item in result if item["name"] == "codex-plugin:engineering-delivery"
@@ -119,7 +139,7 @@ class DoctorTest(unittest.TestCase):
             path = f"{bin_dir}:{os.environ.get('PATH', '')}"
             with patch.dict(os.environ, {"PATH": path}, clear=False):
                 result = doctor.codex_checks(
-                    ["engineering-delivery"], {"engineering-delivery": "0.1.0"}
+                    ["engineering-delivery"], {"engineering-delivery": "0.2.0"}
                 )
             plugin_check = next(
                 item for item in result if item["name"] == "codex-plugin:engineering-delivery"
@@ -135,7 +155,7 @@ class DoctorTest(unittest.TestCase):
                 """
                 import sys
                 if sys.argv[1:] == ["plugin", "list"]:
-                    print("engineering-delivery@ridgehalo 0.1.0+other")
+                    print("engineering-delivery@ridgehalo 0.2.0+other")
                     raise SystemExit(0)
                 raise SystemExit(2)
                 """,
@@ -143,7 +163,7 @@ class DoctorTest(unittest.TestCase):
             path = f"{bin_dir}:{os.environ.get('PATH', '')}"
             with patch.dict(os.environ, {"PATH": path}, clear=False):
                 result = doctor.codex_checks(
-                    ["engineering-delivery"], {"engineering-delivery": "0.1.0"}
+                    ["engineering-delivery"], {"engineering-delivery": "0.2.0"}
                 )
             plugin_check = next(
                 item for item in result if item["name"] == "codex-plugin:engineering-delivery"
@@ -196,7 +216,7 @@ class DoctorTest(unittest.TestCase):
             path = f"{bin_dir}:{os.environ.get('PATH', '')}"
             with patch.dict(os.environ, {"PATH": path}, clear=False):
                 result = doctor.claude_checks(
-                    ROOT, ["engineering-delivery"], {"engineering-delivery": "0.1.0"}
+                    ROOT, ["engineering-delivery"], {"engineering-delivery": "0.2.0"}
                 )
             source_check = next(
                 item for item in result if item["name"] == "claude-marketplace-source"
@@ -230,7 +250,7 @@ class DoctorTest(unittest.TestCase):
             path = f"{bin_dir}:{os.environ.get('PATH', '')}"
             with patch.dict(os.environ, {"PATH": path}, clear=False):
                 result = doctor.claude_checks(
-                    ROOT, ["engineering-delivery"], {"engineering-delivery": "0.1.0"}
+                    ROOT, ["engineering-delivery"], {"engineering-delivery": "0.2.0"}
                 )
             plugin_check = next(
                 item for item in result if item["name"] == "claude-plugin:engineering-delivery"

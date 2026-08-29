@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ridgehalo.dev/schemas/external-work-item-ref.schema.json",
+  "title": "ExternalWorkItemRef",
+  "type": "object",
+  "required": [
+    "stableId",
+    "canonicalOwner",
+    "sourceUri",
+    "sourceRevision",
+    "observedAt",
+    "stale"
+  ],
+  "properties": {
+    "stableId": {"type": "string", "minLength": 1},
+    "canonicalOwner": {"type": "string", "minLength": 1},
+    "sourceUri": {"type": "string", "minLength": 1},
+    "sourceRevision": {"type": "string", "minLength": 1},
+    "observedAt": {"type": "string", "minLength": 1},
+    "stale": {"type": "boolean"}
+  },
+  "additionalProperties": false
+}

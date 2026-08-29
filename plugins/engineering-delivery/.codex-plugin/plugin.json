@@ -1,7 +1,7 @@
 {
   "name": "engineering-delivery",
-  "version": "0.1.0",
-  "description": "Portable Issue-to-PR delivery, self-review, review loops, and UI evidence workflows.",
+  "version": "0.2.0",
+  "description": "Portable delivery contracts, Issue-to-PR workflows, risk review, and verifiable evidence.",
   "author": {
     "name": "RidgeHalo",
     "url": "https://github.com/ridgehalo"
@@ -14,7 +14,7 @@
   "interface": {
     "displayName": "Engineering Delivery",
     "shortDescription": "Issueから検証済みPRまでを安全に進めます。",
-    "longDescription": "Issue-to-PR、PRセルフレビュー、追加精査、UI証跡取得を、リポジトリ固有ポリシーを尊重しながら実行します。",
+    "longDescription": "公開contract、Issue-to-PR、PRセルフレビュー、追加精査、UI証跡取得を、consumer固有ポリシーを尊重しながら実行します。",
     "developerName": "RidgeHalo",
     "category": "Productivity",
     "capabilities": ["Interactive", "Write"],

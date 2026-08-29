@@ -1,0 +1,11 @@
+{
+  "kind": "deliveryEvent",
+  "payload": {
+    "eventId": "event-001",
+    "workItem": "work-item-001",
+    "stage": "verify",
+    "occurredAt": "2026-08-29T00:00:00Z",
+    "sourceRevision": "head-001",
+    "evidenceRef": "evidence-001"
+  }
+}

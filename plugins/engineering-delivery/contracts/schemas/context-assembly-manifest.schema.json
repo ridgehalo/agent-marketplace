@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ridgehalo.dev/schemas/context-assembly-manifest.schema.json",
+  "title": "ContextAssemblyManifest",
+  "type": "object",
+  "required": ["sources", "contextLock"],
+  "properties": {
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["uri", "revision", "observedAt", "trustDomain"],
+        "properties": {
+          "uri": {"type": "string", "minLength": 1},
+          "revision": {"type": "string", "minLength": 1},
+          "observedAt": {"type": "string", "minLength": 1},
+          "trustDomain": {"type": "string", "enum": ["public", "personal", "product"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "contextLock": {"type": "string", "minLength": 64}
+  },
+  "additionalProperties": false
+}

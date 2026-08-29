@@ -1,0 +1,14 @@
+{
+  "kind": "contextAssemblyManifest",
+  "expectedError": "revision",
+  "payload": {
+    "sources": [
+      {
+        "uri": "https://example.invalid/contracts/core",
+        "observedAt": "2026-08-29T00:00:00Z",
+        "trustDomain": "public"
+      }
+    ],
+    "contextLock": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  }
+}

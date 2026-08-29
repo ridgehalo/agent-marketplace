@@ -1,0 +1,11 @@
+{
+  "kind": "externalWorkItemRef",
+  "expectedError": "observedAt",
+  "payload": {
+    "stableId": "work-item-001",
+    "canonicalOwner": "source-system",
+    "sourceUri": "https://example.invalid/work-items/001",
+    "sourceRevision": "revision-001",
+    "stale": false
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "kind": "deliveryManifest",
+  "payload": {
+    "workItem": "work-item-001",
+    "baseRevision": "base-001",
+    "headRevision": "head-001",
+    "risk": "high",
+    "reviewerCount": 2,
+    "gates": {
+      "plan": "passed",
+      "build": "passed",
+      "verify": "passed",
+      "release": "pending"
+    },
+    "testIntent": {
+      "core": ["contract validation"],
+      "shell": ["filesystem read-back"],
+      "unit": ["valid and invalid payloads"],
+      "integration": ["generated document read-back"],
+      "e2e": [],
+      "guards": ["no production endpoint", "no personal data"]
+    },
+    "evidence": [
+      {
+        "type": "local-test",
+        "status": "passed",
+        "source": "python3 -m unittest discover -s tests -v"
+      },
+      {
+        "type": "external-read-back",
+        "status": "unverified",
+        "source": "consumer validation is performed after pin update"
+      }
+    ]
+  }
+}

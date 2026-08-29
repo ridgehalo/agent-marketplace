@@ -32,10 +32,11 @@ repoの永続指示、linked Issue、PR本文、review comments、Issue comments
 1. PR diffと要求を対応付ける。
 2. 変更波及先とコメント取り込み漏れを探す。
 3. 既存testが要求を本当にcoverするか確認する。
-4. 修正が依頼範囲内で許可済みなら、メイン作業branchで反映する。reviewだけの依頼では変更しない。
-5. 修正後に必要なlint、test、build、manual checkを再実行する。
-6. PR本文の対応内容と検証結果が古ければ、許可されたGitHub writeとして更新してread-backする。
-7. findingがない場合も、確認した観点と証拠を明記する。
+4. delivery manifestがある場合は、最終HEAD、risk別reviewer数、Gate、Evidence type、未確認項目がpublic contractと一致するか確認する。
+5. 修正が依頼範囲内で許可済みなら、メイン作業branchで反映する。reviewだけの依頼では変更しない。
+6. 修正後に必要なlint、test、build、manual checkを再実行する。
+7. PR本文の対応内容と検証結果が古ければ、許可されたGitHub writeとして更新してread-backする。
+8. findingがない場合も、確認した観点と証拠を明記する。
 
 独立reviewを使う場合は読み取り中心に限定し、同じファイルを並列編集させない。利用環境がagent delegationを許可していない場合は、単一agentで観点を分けて実行する。
 

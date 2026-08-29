@@ -1,0 +1,14 @@
+{
+  "kind": "deliveryManifest",
+  "expectedError": "reviewerCount",
+  "payload": {
+    "workItem": "work-item-001",
+    "baseRevision": "base-001",
+    "headRevision": "head-001",
+    "risk": "high",
+    "reviewerCount": 0,
+    "gates": {"plan": "passed", "build": "passed", "verify": "passed", "release": "pending"},
+    "testIntent": {"core": [], "shell": [], "unit": [], "integration": [], "e2e": [], "guards": ["isolated"]},
+    "evidence": [{"type": "local-test", "status": "passed", "source": "fixture"}]
+  }
+}

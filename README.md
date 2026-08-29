@@ -14,8 +14,10 @@ Codexを主系として、複数リポジトリで再利用できるagent plugin
 
 ## Plugins
 
-### `engineering-delivery` 0.1.0
+### `engineering-delivery` 0.2.0
 
+- public contract: 4 Gate、risk routing、Evidence、cross-domain reference
+- templates: Issue、Plan、Test Intent、Reviewer、PR Evidence
 - `issue-to-pr`: 既存Issueを専用branch、実装、検証、commit、PRまで進める
 - `pr-self-review`: PR差分を人間レビュー前に横断確認する
 - `loop-review`: 高リスク差分を同じ観点で複数ラウンド確認する
@@ -30,7 +32,7 @@ Codexを主系として、複数リポジトリで再利用できるagent plugin
 ```bash
 git clone https://github.com/ridgehalo/agent-marketplace.git
 cd agent-marketplace
-git checkout v0.1.0
+git checkout <approved-version-or-commit>
 ```
 
 実行内容を確認します。
@@ -70,6 +72,42 @@ python3 scripts/doctor.py --target all --plugin engineering-delivery --json
 
 `doctor` はsource manifestの整合、CLI可用性、marketplace登録元、plugin導入、version、enabled状態を別々に報告します。確認できない項目や、登録元が現在のsourceと異なる状態を成功扱いしません。
 
+consumer profileのcontract pinとContext Lockも読み戻せます。
+
+```bash
+python3 scripts/doctor.py \
+  --target codex \
+  --profile plugins/engineering-delivery/profiles/personal-consumer.json \
+  --json
+```
+
+## Public delivery contract
+
+`plugins/engineering-delivery/contracts/manifest.json` が、4 Gate、risk routing、Evidence type、schema、template、consumer profileの正本です。
+生成された参照文書は
+[`plugins/engineering-delivery/docs/generated/engineering-delivery-contract.md`](plugins/engineering-delivery/docs/generated/engineering-delivery-contract.md)
+です。
+
+```bash
+python3 scripts/contracts.py validate
+python3 scripts/contracts.py render-docs --check
+python3 scripts/contracts.py compile \
+  --profile plugins/engineering-delivery/profiles/product-consumer.json
+```
+
+plugin単体を配置したclean install先でも、同梱toolをそのまま使えます。
+
+```bash
+python3 scripts/contracts.py validate
+python3 scripts/contracts.py compile --profile profiles/product-consumer.json
+```
+
+- personal / product consumerは同じpublic contractをpinする
+- private state storeとProject固有fieldは各consumerが所有する
+- 外部参照にはsource revision、観測時刻、stale stateを必須にする
+- promotionは許可fieldとredaction classを固定する
+- generated docsのdrift、古いcontract pin、invalid fixtureはCIで拒否する
+
 ## 更新とversion固定
 
 - releaseはSemVerと `v<version>` tagを使う
@@ -102,6 +140,8 @@ python3 scripts/doctor.py --target all --plugin engineering-delivery --json
 
 ```bash
 python3 scripts/validate.py
+python3 scripts/contracts.py validate
+python3 scripts/contracts.py render-docs --check
 python3 -m unittest discover -s tests -v
 claude plugin validate .
 claude plugin validate plugins/engineering-delivery

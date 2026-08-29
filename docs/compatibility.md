@@ -8,6 +8,10 @@
 | Codex CLI | `plugin marketplace add` / `plugin add` 対応version | `codex plugin list` read-back | CLIがある環境で確認 |
 | Claude Code | 2.1.149 | `plugin validate`、隔離configへのinstall、`plugin list --json`、`plugin details` | Gate前preflight済み |
 
+public delivery contractはplatform CLIに依存せずPython標準ライブラリで検証・compileする。現在のcontract version `0.1.0`をconsumer profileでpinし、plugin versionとは別に`doctor --profile`で古いcontract pinを拒否する。
+
+現在のcontract digest `31151b5aa90239be684e059e816835fb2e5e7abcec9de91c8239db9e292b4490`は、manifest、schema、template、validator / compilerの内容から決定する。consumer profileはこのdigestをpinし、変更時にdigest、generated docs、CHANGELOG、互換性宣言が揃わなければCIを失敗させる。
+
 version依存の高度なClaude marketplace機能は初期versionで使いません。相対plugin source、明示version、local / GitHub marketplaceという基本機能だけを使います。
 
 ## Versioning
@@ -15,6 +19,7 @@ version依存の高度なClaude marketplace機能は初期versionで使いませ
 - pluginとmarketplace entryはSemVerを使う
 - root marketplace自体のversionは、catalog契約が変わる場合だけ更新する
 - plugin releaseごとに `v<plugin-version>` tagを作る
+- public contractは独立したSemVerを持ち、consumer profileが明示的にpinする
 - breaking changeはmajor、後方互換のcapability追加はminor、修正はpatch
 - release tagの内容とmanifest versionが一致しない場合はreleaseしない
 
@@ -29,9 +34,10 @@ version依存の高度なClaude marketplace機能は初期versionで使いませ
 
 1. manifestsとmarketplace entryのversionを揃える
 2. `python3 scripts/validate.py` とunit testsを実行する
-3. Codex / Claude validatorを実行する
-4. clean cloneでbootstrapを実行する
-5. `doctor` で両targetをread-backする
-6. secret scanと公開境界reviewを行う
-7. CHANGELOGを更新する
-8. tagを作成する
+3. `scripts/contracts.py validate` とgenerated docs checkを実行する
+4. Codex / Claude validatorを実行する
+5. clean cloneでbootstrapを実行する
+6. `doctor` で両targetとconsumer profileをread-backする
+7. secret scanと公開境界reviewを行う
+8. CHANGELOGを更新する
+9. tagを作成する

@@ -1,0 +1,94 @@
+{
+  "contractVersion": "0.1.0",
+  "contractDigest": "31151b5aa90239be684e059e816835fb2e5e7abcec9de91c8239db9e292b4490",
+  "gates": ["plan", "build", "verify", "release"],
+  "riskRouting": {
+    "low": {"reviewers": 0, "humanRequired": false},
+    "medium": {"reviewers": 1, "humanRequired": false},
+    "high": {"reviewers": 2, "humanRequired": false},
+    "critical": {"reviewers": 2, "humanRequired": true}
+  },
+  "evidenceTypes": [
+    "local-test",
+    "ci",
+    "build",
+    "journey",
+    "deployment",
+    "external-read-back"
+  ],
+  "goalModes": {
+    "manual": {
+      "selection": "interactive-only",
+      "authorizes": []
+    },
+    "auto": {
+      "selection": "scheduled-eligible",
+      "authorizes": [
+        "repository-write",
+        "issue-update",
+        "project-update",
+        "pull-request"
+      ],
+      "excludes": [
+        "merge",
+        "deployment",
+        "publication",
+        "payment",
+        "permission-change"
+      ]
+    },
+    "hold": {
+      "selection": "excluded",
+      "authorizes": []
+    }
+  },
+  "unsetGoalModeSelection": "excluded",
+  "reviewerOutputFields": [
+    "severity",
+    "condition",
+    "impact",
+    "evidence",
+    "minimalFix"
+  ],
+  "testInfrastructureRequirements": [
+    "unique-namespace",
+    "factory",
+    "cleanup",
+    "production-guard",
+    "personal-data-guard",
+    "external-write-command-separation"
+  ],
+  "skillPromotionPolicy": {
+    "minimumConsumers": 2,
+    "alternative": "repeated-use",
+    "defaultArtifact": "template"
+  },
+  "compatibility": {
+    "minimumContractVersion": "0.1.0",
+    "breakingChangePolicy": "major",
+    "rollback": "pin-previous-version"
+  },
+  "schemas": {
+    "externalWorkItemRef": "contracts/schemas/external-work-item-ref.schema.json",
+    "promotionBundle": "contracts/schemas/promotion-bundle.schema.json",
+    "contextAssemblyManifest": "contracts/schemas/context-assembly-manifest.schema.json",
+    "deliveryEvent": "contracts/schemas/delivery-event.schema.json",
+    "deliveryManifest": "contracts/schemas/delivery-manifest.schema.json",
+    "consumerProfile": "contracts/schemas/consumer-profile.schema.json"
+  },
+  "templates": {
+    "issue": "templates/issue-contract.md",
+    "plan": "templates/plan-contract.md",
+    "testIntent": "templates/test-intent.md",
+    "reviewer": "templates/reviewer-contract.md",
+    "prEvidence": "templates/pr-evidence.md"
+  },
+  "tools": {
+    "contracts": "scripts/contracts.py"
+  },
+  "profiles": [
+    "profiles/personal-consumer.json",
+    "profiles/product-consumer.json"
+  ],
+  "generatedDocs": "docs/generated/engineering-delivery-contract.md"
+}

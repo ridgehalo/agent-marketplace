@@ -72,6 +72,41 @@ def source_versions(root: Path, plugins: list[str]) -> dict[str, str]:
     return versions
 
 
+def profile_checks(
+    root: Path, profiles: list[Path]
+) -> list[dict[str, str]]:
+    if not profiles:
+        return []
+    sys.path.insert(0, str(root / "scripts"))
+    from contracts import compile_profile
+
+    results: list[dict[str, str]] = []
+    for profile_path in profiles:
+        try:
+            compiled = compile_profile(profile_path.resolve(), root)
+            profile_id = compiled["profile"]["profileId"]
+            version = compiled["contractVersion"]
+            digest = compiled["contractDigest"]
+            lock = compiled["contextLock"]
+        except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError) as error:
+            results.append(
+                check(
+                    f"consumer-profile:{profile_path.name}",
+                    "fail",
+                    str(error),
+                )
+            )
+            continue
+        results.append(
+            check(
+                f"consumer-profile:{profile_id}",
+                "pass",
+                f"contractVersion={version} contractDigest={digest} contextLock={lock}",
+            )
+        )
+    return results
+
+
 def codex_checks(
     plugins: list[str], expected_versions: dict[str, str]
 ) -> list[dict[str, str]]:
@@ -225,8 +260,14 @@ def claude_checks(
     return results
 
 
-def inspect(root: Path, targets: list[str], plugins: list[str]) -> dict[str, Any]:
+def inspect(
+    root: Path,
+    targets: list[str],
+    plugins: list[str],
+    profiles: list[Path] | None = None,
+) -> dict[str, Any]:
     source_results = source_checks(root, plugins)
+    source_results.extend(profile_checks(root, profiles or []))
     expected_versions = source_versions(root, plugins)
     payload: dict[str, Any] = {"source": source_results, "targets": {}}
     if "codex" in targets:
@@ -245,6 +286,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--target", choices=("codex", "claude", "all"), default="codex")
     parser.add_argument("--plugin", action="append", dest="plugins")
     parser.add_argument("--source", type=Path, default=ROOT)
+    parser.add_argument(
+        "--profile",
+        action="append",
+        type=Path,
+        dest="profiles",
+        help="Consumer profile to compile and read back. Repeat for multiple profiles.",
+    )
     parser.add_argument("--json", action="store_true")
     return parser.parse_args()
 
@@ -253,7 +301,7 @@ def main() -> int:
     args = parse_args()
     plugins = args.plugins or [DEFAULT_PLUGIN]
     targets = ["codex", "claude"] if args.target == "all" else [args.target]
-    payload = inspect(args.source.resolve(), targets, plugins)
+    payload = inspect(args.source.resolve(), targets, plugins, args.profiles or [])
     if args.json:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
     else:

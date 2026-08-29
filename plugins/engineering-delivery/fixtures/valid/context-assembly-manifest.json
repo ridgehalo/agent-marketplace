@@ -1,0 +1,14 @@
+{
+  "kind": "contextAssemblyManifest",
+  "payload": {
+    "sources": [
+      {
+        "uri": "https://example.invalid/contracts/core",
+        "revision": "revision-001",
+        "observedAt": "2026-08-29T00:00:00Z",
+        "trustDomain": "public"
+      }
+    ],
+    "contextLock": "7388646d606b76086a65cb64e88a1435141c191b261f7c58234b96c5914099b1"
+  }
+}

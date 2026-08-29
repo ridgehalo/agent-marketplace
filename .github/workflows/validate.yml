@@ -23,6 +23,11 @@ jobs:
       - name: Validate contracts and public boundary
         run: python3 scripts/validate.py
 
+      - name: Validate generated delivery contract
+        run: |
+          python3 scripts/contracts.py validate
+          python3 scripts/contracts.py render-docs --check
+
       - name: Run unit tests
         run: python3 -m unittest discover -s tests -v
 

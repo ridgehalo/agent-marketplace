@@ -4,6 +4,14 @@
 
 ## [Unreleased]
 
+## [0.3.3] - 2026-08-31
+
+contract-digest: caf6ad24dc819d01c61fbd3a7950a2f50dde8969e0e7dec4240e52b32ef4130a
+
+### Fixed
+
+- canonical Issue templateにTest Intentのtopology、failure case、安全なtest infrastructureを統合
+
 ## [0.3.2] - 2026-08-31
 
 contract-digest: 078fdbcd7cf70dfcfe727319f54459f3719db85739316a2b2ed3bfdacfb81546

@@ -24,7 +24,7 @@ class DeliveryContractTest(unittest.TestCase):
         self.assertEqual(manifest["unsetGoalModeSelection"], "excluded")
         self.assertIn("repository-write", manifest["goalModes"]["auto"]["authorizes"])
         self.assertIn("merge", manifest["goalModes"]["auto"]["excludes"])
-        self.assertEqual(manifest["contractVersion"], "0.2.0")
+        self.assertEqual(manifest["contractVersion"], "0.2.1")
         template_contract = manifest["templateContract"]
         self.assertEqual(template_contract["version"], "1.0.0")
         self.assertEqual(
@@ -301,13 +301,13 @@ class DeliveryContractTest(unittest.TestCase):
             shutil.copytree(ROOT, candidate, ignore=shutil.ignore_patterns(".git", "__pycache__"))
             changelog = candidate / "CHANGELOG.md"
             changelog.write_text(
-                changelog.read_text(encoding="utf-8").replace("[0.3.1]", "[removed]"),
+                changelog.read_text(encoding="utf-8").replace("[0.3.2]", "[removed]"),
                 encoding="utf-8",
             )
             compatibility = candidate / "docs/compatibility.md"
             compatibility.write_text(
                 compatibility.read_text(encoding="utf-8").replace(
-                    "contract version `0.2.0`", "contract version is missing"
+                    "contract version `0.2.1`", "contract version is missing"
                 ),
                 encoding="utf-8",
             )

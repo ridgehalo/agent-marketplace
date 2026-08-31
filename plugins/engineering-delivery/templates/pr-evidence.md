@@ -105,4 +105,4 @@
 
 ## 関連Issue / PR
 
-Closes https://github.com/OWNER/REPOSITORY/issues/000
+Closes <https://github.com/OWNER/REPOSITORY/issues/000>

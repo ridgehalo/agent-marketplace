@@ -14,7 +14,7 @@ Codexを主系として、複数リポジトリで再利用できるagent plugin
 
 ## Plugins
 
-### `engineering-delivery` 0.3.1
+### `engineering-delivery` 0.3.2
 
 - public contract: 4 Gate、risk routing、Evidence、cross-domain reference
 - templates: Issue、Plan、Test Intent、Reviewer、PR Evidence

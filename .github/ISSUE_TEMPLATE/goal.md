@@ -42,6 +42,7 @@ assignees: ""
 - Risk Triggers:
 - Reviewer Routing:
 - Human Gate Requirement:
+- Release Human Gates:
 - Human Gate Approval Evidence:
 
 ## 4. テスト影響範囲

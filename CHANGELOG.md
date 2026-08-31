@@ -4,6 +4,15 @@
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-08-31
+
+contract-digest: 078fdbcd7cf70dfcfe727319f54459f3719db85739316a2b2ed3bfdacfb81546
+
+### Fixed
+
+- canonical Issue templateへ既存mobile consumerが要求するRelease Human Gates欄を追加
+- canonical PR templateのIssue URLをMarkdown lint互換の表記へ修正
+
 ## [0.3.1] - 2026-08-31
 
 contract-digest: 6fe80da20eae19e423f371fa55b346e269c52a44c9509cbacb92ab88de24ebee

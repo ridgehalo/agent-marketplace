@@ -1,6 +1,6 @@
 {
   "name": "engineering-delivery",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Portable delivery contracts, Issue-to-PR workflows, risk review, and verifiable evidence.",
   "author": {
     "name": "RidgeHalo",

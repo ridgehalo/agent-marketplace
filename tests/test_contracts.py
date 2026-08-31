@@ -33,7 +33,7 @@ class ContractValidationTest(unittest.TestCase):
                 / "plugins/engineering-delivery/.claude-plugin/plugin.json"
             )
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-            manifest["version"] = "0.3.0"
+            manifest["version"] = "9.9.9"
             manifest_path.write_text(
                 json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
             )

@@ -4,9 +4,9 @@
 
 ## Version
 
-`0.1.0`
+`0.2.0`
 
-Contract digest: `31151b5aa90239be684e059e816835fb2e5e7abcec9de91c8239db9e292b4490`
+Contract digest: `0e25c936b62c23a814b941905c2d905b0d761932347e7c443035d86b8a39d56a`
 
 ## Gates
 

@@ -370,6 +370,98 @@ Goal Modeが未設定の場合: `{manifest['unsetGoalModeSelection']}`
 """
 
 
+def _validate_template_contract(
+    root: Path, manifest: dict[str, Any], plugin_root: Path
+) -> list[str]:
+    errors: list[str] = []
+    template_contract = manifest.get("templateContract")
+    if not isinstance(template_contract, dict):
+        return ["templateContract is required"]
+
+    required_sections = template_contract.get("requiredTopLevelSections")
+    expected_sections = [
+        "1. 概要",
+        "2. 背景",
+        "3. 詳細設計",
+        "4. テスト影響範囲",
+        "5. 新規テストケース",
+        "6. 実装順",
+        "7. マージ前確認",
+        "8. スコープ外",
+    ]
+    if required_sections != expected_sections:
+        errors.append("templateContract.requiredTopLevelSections is incomplete")
+
+    templates = manifest.get("templates")
+    if not isinstance(templates, dict):
+        return errors
+    paths = {
+        "issue": templates.get("issue"),
+        "pull-request": templates.get("prEvidence"),
+    }
+    contents: dict[str, str] = {}
+    for kind, relative in paths.items():
+        if not isinstance(relative, str):
+            errors.append(f"{kind} canonical template path is missing")
+            continue
+        try:
+            content = (plugin_root / relative).read_text(encoding="utf-8")
+        except OSError as error:
+            errors.append(f"{kind} canonical template: {error}")
+            continue
+        contents[kind] = content
+        headings = re.findall(r"^## (.+)$", content, flags=re.MULTILINE)
+        if headings[: len(expected_sections)] != expected_sections:
+            errors.append(f"{kind} canonical template section order differs")
+
+    evidence_fields = template_contract.get("requiredPrEvidenceFields")
+    pull_request = contents.get("pull-request", "")
+    if not isinstance(evidence_fields, list) or not evidence_fields:
+        errors.append("templateContract.requiredPrEvidenceFields is required")
+    else:
+        missing = [
+            field
+            for field in evidence_fields
+            if not isinstance(field, str) or f"- {field}:" not in pull_request
+        ]
+        if missing:
+            errors.append(
+                "pull-request canonical template is missing Evidence fields: "
+                + ", ".join(str(field) for field in missing)
+            )
+
+    appendix = template_contract.get("appendixCoverage")
+    expected_appendix = {chr(code) for code in range(ord("A"), ord("M") + 1)}
+    if not isinstance(appendix, dict) or set(appendix) != expected_appendix:
+        errors.append("templateContract.appendixCoverage must cover A through M")
+    else:
+        allowed_decisions = {"adopt", "adapt", "adapt-or-na"}
+        for identifier, resolution in appendix.items():
+            if (
+                not isinstance(resolution, dict)
+                or resolution.get("decision") not in allowed_decisions
+                or not isinstance(resolution.get("owner"), str)
+                or not isinstance(resolution.get("artifact"), str)
+            ):
+                errors.append(f"templateContract.appendixCoverage.{identifier} is invalid")
+
+    if (root / "plugins/engineering-delivery").is_dir():
+        repository_copies = {
+            "issue": root / ".github/ISSUE_TEMPLATE/goal.md",
+            "pull-request": root / ".github/pull_request_template.md",
+        }
+        for kind, path in repository_copies.items():
+            try:
+                copy = path.read_text(encoding="utf-8")
+            except OSError as error:
+                errors.append(f"repository {kind} template: {error}")
+                continue
+            if copy != contents.get(kind):
+                errors.append(f"repository {kind} template differs from public canonical")
+
+    return errors
+
+
 def validate_contracts(root: Path = ROOT) -> list[str]:
     errors: list[str] = []
     try:
@@ -460,6 +552,8 @@ def validate_contracts(root: Path = ROOT) -> list[str]:
         for name, relative in templates.items():
             if not isinstance(relative, str) or not (plugin_root / relative).is_file():
                 errors.append(f"template {name} is missing")
+
+    errors.extend(_validate_template_contract(root, manifest, plugin_root))
 
     tools = manifest.get("tools")
     if not isinstance(tools, dict) or not tools:

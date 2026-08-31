@@ -14,10 +14,11 @@ Codexを主系として、複数リポジトリで再利用できるagent plugin
 
 ## Plugins
 
-### `engineering-delivery` 0.2.0
+### `engineering-delivery` 0.3.0
 
 - public contract: 4 Gate、risk routing、Evidence、cross-domain reference
 - templates: Issue、Plan、Test Intent、Reviewer、PR Evidence
+- canonical Issue / PR template: 全consumerで同じ番号付き8セクションとPR Evidenceを使用
 - `issue-to-pr`: 既存Issueを専用branch、実装、検証、commit、PRまで進める
 - `pr-self-review`: PR差分を人間レビュー前に横断確認する
 - `loop-review`: 高リスク差分を同じ観点で複数ラウンド確認する

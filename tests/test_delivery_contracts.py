@@ -24,6 +24,22 @@ class DeliveryContractTest(unittest.TestCase):
         self.assertEqual(manifest["unsetGoalModeSelection"], "excluded")
         self.assertIn("repository-write", manifest["goalModes"]["auto"]["authorizes"])
         self.assertIn("merge", manifest["goalModes"]["auto"]["excludes"])
+        self.assertEqual(manifest["contractVersion"], "0.2.0")
+        template_contract = manifest["templateContract"]
+        self.assertEqual(template_contract["version"], "1.0.0")
+        self.assertEqual(
+            template_contract["requiredTopLevelSections"],
+            [
+                "1. 概要",
+                "2. 背景",
+                "3. 詳細設計",
+                "4. テスト影響範囲",
+                "5. 新規テストケース",
+                "6. 実装順",
+                "7. マージ前確認",
+                "8. スコープ外",
+            ],
+        )
         generated = (
             ROOT
             / "plugins/engineering-delivery/docs/generated/engineering-delivery-contract.md"
@@ -35,6 +51,25 @@ class DeliveryContractTest(unittest.TestCase):
                 ROOT / "plugins/engineering-delivery/scripts/contracts.py"
             ).read_text(encoding="utf-8"),
         )
+
+    def test_repository_templates_match_the_public_canonical_templates(self) -> None:
+        plugin = ROOT / "plugins/engineering-delivery"
+        issue = (plugin / "templates/issue-contract.md").read_text(encoding="utf-8")
+        pull_request = (plugin / "templates/pr-evidence.md").read_text(encoding="utf-8")
+
+        self.assertEqual(
+            (ROOT / ".github/ISSUE_TEMPLATE/goal.md").read_text(encoding="utf-8"),
+            issue,
+        )
+        self.assertEqual(
+            (ROOT / ".github/pull_request_template.md").read_text(encoding="utf-8"),
+            pull_request,
+        )
+        for heading in contracts.load_manifest(ROOT)["templateContract"][
+            "requiredTopLevelSections"
+        ]:
+            self.assertIn(f"## {heading}", issue)
+            self.assertIn(f"## {heading}", pull_request)
 
     def test_personal_and_product_profiles_compile_without_shared_state(self) -> None:
         personal = contracts.compile_profile(
@@ -266,13 +301,13 @@ class DeliveryContractTest(unittest.TestCase):
             shutil.copytree(ROOT, candidate, ignore=shutil.ignore_patterns(".git", "__pycache__"))
             changelog = candidate / "CHANGELOG.md"
             changelog.write_text(
-                changelog.read_text(encoding="utf-8").replace("[0.2.0]", "[removed]"),
+                changelog.read_text(encoding="utf-8").replace("[0.3.0]", "[removed]"),
                 encoding="utf-8",
             )
             compatibility = candidate / "docs/compatibility.md"
             compatibility.write_text(
                 compatibility.read_text(encoding="utf-8").replace(
-                    "contract version `0.1.0`", "contract version is missing"
+                    "contract version `0.2.0`", "contract version is missing"
                 ),
                 encoding="utf-8",
             )

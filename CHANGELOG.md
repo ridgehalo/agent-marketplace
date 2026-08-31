@@ -4,6 +4,16 @@
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-08-31
+
+contract-digest: 0e25c936b62c23a814b941905c2d905b0d761932347e7c443035d86b8a39d56a
+
+### Added
+
+- canonical Issue / PR template with the same numbered eight-section reading order
+- machine-readable Appendix A-M ownership and adoption decisions
+- repository copy and template structure drift validation
+
 ## [0.2.0] - 2026-08-29
 
 contract-digest: 31151b5aa90239be684e059e816835fb2e5e7abcec9de91c8239db9e292b4490

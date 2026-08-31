@@ -56,6 +56,23 @@ assignees: ""
 - namespace / factory / cleanup:
 - production / personal-data / external-write guard:
 
+#### Test topology
+
+- Unit:
+- Integration:
+- E2E:
+- Not selected and why:
+
+#### Boundary and failure cases
+
+#### Safe test infrastructure
+
+- Unique namespace:
+- Factory:
+- Cleanup:
+- Production / personal-data guards:
+- External-write command separation:
+
 ## 5. 新規テストケース
 
 ### Acceptance criteria

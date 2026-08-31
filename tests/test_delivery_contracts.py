@@ -301,7 +301,7 @@ class DeliveryContractTest(unittest.TestCase):
             shutil.copytree(ROOT, candidate, ignore=shutil.ignore_patterns(".git", "__pycache__"))
             changelog = candidate / "CHANGELOG.md"
             changelog.write_text(
-                changelog.read_text(encoding="utf-8").replace("[0.3.0]", "[removed]"),
+                changelog.read_text(encoding="utf-8").replace("[0.3.1]", "[removed]"),
                 encoding="utf-8",
             )
             compatibility = candidate / "docs/compatibility.md"

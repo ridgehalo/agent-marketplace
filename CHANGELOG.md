@@ -4,6 +4,14 @@
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-08-31
+
+contract-digest: 6fe80da20eae19e423f371fa55b346e269c52a44c9509cbacb92ab88de24ebee
+
+### Fixed
+
+- canonical PR templateをconsumerのPrettierとbyte単位で安定する形式へ正規化
+
 ## [0.3.0] - 2026-08-31
 
 contract-digest: 0e25c936b62c23a814b941905c2d905b0d761932347e7c443035d86b8a39d56a

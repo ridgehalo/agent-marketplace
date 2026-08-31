@@ -1,7 +1,7 @@
 {
   "profileId": "product-control-plane",
   "contractVersion": "0.2.0",
-  "contractDigest": "0e25c936b62c23a814b941905c2d905b0d761932347e7c443035d86b8a39d56a",
+  "contractDigest": "6fe80da20eae19e423f371fa55b346e269c52a44c9509cbacb92ab88de24ebee",
   "trustDomain": "product",
   "deliveryStream": "product-delivery",
   "enabledContracts": [

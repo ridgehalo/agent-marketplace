@@ -56,7 +56,7 @@ class DoctorTest(unittest.TestCase):
                 """
                 import sys
                 if sys.argv[1:] == ["plugin", "list"]:
-                    print("engineering-delivery@ridgehalo 0.3.0")
+                    print("engineering-delivery@ridgehalo 0.3.1")
                     raise SystemExit(0)
                 raise SystemExit(2)
                 """,
@@ -74,7 +74,7 @@ class DoctorTest(unittest.TestCase):
                 if args == ["plugin", "list", "--json"]:
                     print(json.dumps([{{
                         "id": "engineering-delivery@ridgehalo",
-                        "version": "0.3.0",
+                        "version": "0.3.1",
                         "scope": "user",
                         "enabled": True
                     }}]))

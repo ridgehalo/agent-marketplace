@@ -13,7 +13,7 @@ GitHubを読む・更新する場合は [GitHub safety contract](../../reference
 
 明示されたPRを優先する。省略時は現在branchに対応するPRを正確に解決する。PRがまだない場合はlocal diff reviewとして実行し、PR本文更新は未実行と明記する。
 
-repoの永続指示、linked Issue、PR本文、review comments、Issue comments、checks、baseとの差分を読む。コメントやcheckを取得できない場合は未確認として扱う。
+repoの永続指示、linked Issue、PR本文、review comments、Issue comments、checks、baseとの差分を読む。コメントやcheckを取得できない場合は未確認として扱う。dependencyとparent / childはnative Relationshipsを正本として読み戻す。
 
 ## Review設計
 
@@ -37,6 +37,10 @@ repoの永続指示、linked Issue、PR本文、review comments、Issue comments
 6. 修正後に必要なlint、test、build、manual checkを再実行する。
 7. PR本文の対応内容と検証結果が古ければ、許可されたGitHub writeとして更新してread-backする。
 8. findingがない場合も、確認した観点と証拠を明記する。
+
+Projectのcurrent `Status`、`Priority`、`Goal Mode`等をIssue / PR本文の古い値から推測しない。
+PR本文のmerge前classificationには投影元と`observed_at`があり、現在値の正本を名乗って
+いないことを確認する。
 
 独立reviewを使う場合は読み取り中心に限定し、同じファイルを並列編集させない。利用環境がagent delegationを許可していない場合は、単一agentで観点を分けて実行する。
 

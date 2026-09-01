@@ -1,0 +1,27 @@
+{
+  "kind": "ssotProjection",
+  "expectedError": "current-status cannot be pre-merge-classification",
+  "payload": {
+    "contractId": "engineering-delivery-ssot-v1",
+    "sources": [
+      {
+        "sourceId": "delivery-project",
+        "sourceKind": "github-project",
+        "canonicalFor": ["workflow.current-status"],
+        "generated": false
+      }
+    ],
+    "projections": [
+      {
+        "projectionId": "pull-request-project-status",
+        "projectionOf": {
+          "sourceId": "delivery-project",
+          "fields": ["workflow.current-status"]
+        },
+        "purpose": "pre-merge-classification",
+        "observedAt": "2026-09-01T00:00:00Z",
+        "generated": false
+      }
+    ]
+  }
+}

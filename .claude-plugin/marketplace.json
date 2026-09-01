@@ -10,7 +10,7 @@
       "name": "engineering-delivery",
       "source": "./plugins/engineering-delivery",
       "description": "Portable delivery contracts, Issue-to-PR workflows, risk review, and evidence.",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "category": "development"
     }
   ]

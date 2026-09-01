@@ -4,9 +4,9 @@
 
 ## Version
 
-`0.3.0`
+`0.4.0`
 
-Contract digest: `3311d9e2bbe8fae5dcf0165f7536351609d3dde8cb2806eb370fb2e42cbb5985`
+Contract digest: `34614ac71512dab0816b0f3c0be0b4ece382e56c9a867ae5bd78f0126c512c62`
 
 ## Gates
 
@@ -52,6 +52,24 @@ Actionがない場合の明示文:
 任意の提案は必須Actionから分離する。現在のsource stateをlive read-backし、standing
 authorizationとOperation Requestが一致するroutine writeを再承認依頼しない。
 
+## SSOT projection
+
+mutableな現在値と本文へ残す投影を区別する。
+
+現在値として扱うfield:
+
+- `workflow.current-status`
+- `workflow.priority`
+- `workflow.goal-mode`
+
+- current stateの正本はconsumerが指定するGitHub Projectとする
+- dependencyのfield `work-item.dependencies` は
+  `github-native-relationships`だけが正本になれる
+- PR本文の`pull-request.pre-merge-classification`はmerge前classificationであり、
+  Project current statusではない
+- 投影には`projectionOf`、`observedAt`、`generated`を必須にする
+- Issue / PR本文のmutableなsnapshotを現在値として扱わない
+
 ## Reviewer output
 
 `severity` / `condition` / `impact` / `evidence` / `minimalFix`
@@ -87,6 +105,7 @@ authorizationとOperation Requestが一致するroutine writeを再承認依頼�
 | `deliveryManifest` | `contracts/schemas/delivery-manifest.schema.json` |
 | `consumerProfile` | `contracts/schemas/consumer-profile.schema.json` |
 | `terminalReport` | `contracts/schemas/terminal-report.schema.json` |
+| `ssotProjection` | `contracts/schemas/ssot-projection.schema.json` |
 
 ## Templates
 

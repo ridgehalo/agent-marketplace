@@ -1,0 +1,27 @@
+{
+  "kind": "ssotProjection",
+  "expectedError": "must be RFC 3339 UTC",
+  "payload": {
+    "contractId": "engineering-delivery-ssot-v1",
+    "sources": [
+      {
+        "sourceId": "delivery-project",
+        "sourceKind": "github-project",
+        "canonicalFor": ["workflow.current-status"],
+        "generated": false
+      }
+    ],
+    "projections": [
+      {
+        "projectionId": "issue-body-project-status",
+        "projectionOf": {
+          "sourceId": "delivery-project",
+          "fields": ["workflow.current-status"]
+        },
+        "purpose": "snapshot",
+        "observedAt": "not-a-timestamp",
+        "generated": false
+      }
+    ]
+  }
+}

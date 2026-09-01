@@ -1,0 +1,33 @@
+{
+  "kind": "ssotProjection",
+  "expectedError": "canonicalFor must be unique",
+  "payload": {
+    "contractId": "engineering-delivery-ssot-v1",
+    "sources": [
+      {
+        "sourceId": "delivery-project-a",
+        "sourceKind": "github-project",
+        "canonicalFor": ["workflow.current-status"],
+        "generated": false
+      },
+      {
+        "sourceId": "delivery-project-b",
+        "sourceKind": "github-project",
+        "canonicalFor": ["workflow.current-status"],
+        "generated": false
+      }
+    ],
+    "projections": [
+      {
+        "projectionId": "issue-body-project-status",
+        "projectionOf": {
+          "sourceId": "delivery-project-a",
+          "fields": ["workflow.current-status"]
+        },
+        "purpose": "snapshot",
+        "observedAt": "2026-09-01T00:00:00Z",
+        "generated": false
+      }
+    ]
+  }
+}

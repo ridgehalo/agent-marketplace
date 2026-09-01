@@ -96,13 +96,20 @@
 - 外部送信・課金・account・permission変更:
 - Human Gate:
 
-## Project Status
+## Project Classification Snapshot
 
-- Status: `Ready to Merge | Needs Review | Blocked`
+- Observed at: <!-- RFC 3339 -->
+- Projection of: `pull-request.pre-merge-classification` <!-- Final HEADとPR Evidenceから判定する。 -->
+- Project target: <!-- Project URL。current StatusはProjectを正本とする。 -->
+- Classification: `Ready to Merge | Needs Review | Blocked`
 - 分類理由:
 - ブロック条件:
 - 未実行の確認:
 
+この節はmerge前classificationのsnapshotであり、merge後のProject current Statusではない。
+
 ## 関連Issue / PR
+
+dependencyとparent / childの正本はnative Relationshipsとする。
 
 Closes <https://github.com/OWNER/REPOSITORY/issues/000>

@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ridgehalo.dev/schemas/ssot-projection.schema.json",
+  "title": "SsotProjection",
+  "type": "object",
+  "required": ["contractId", "sources", "projections"],
+  "properties": {
+    "contractId": {"type": "string", "minLength": 1},
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["sourceId", "sourceKind", "canonicalFor", "generated"],
+        "properties": {
+          "sourceId": {"type": "string", "minLength": 1},
+          "sourceKind": {
+            "type": "string",
+            "enum": [
+              "github-project",
+              "github-issue",
+              "github-native-relationships",
+              "git-repository",
+              "repository-registry",
+              "migration-manifest",
+              "issue-body",
+              "pull-request-body",
+              "consumer-context"
+            ]
+          },
+          "canonicalFor": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "generated": {"type": "boolean"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "projections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "projectionId",
+          "projectionOf",
+          "purpose",
+          "observedAt",
+          "generated"
+        ],
+        "properties": {
+          "projectionId": {"type": "string", "minLength": 1},
+          "projectionOf": {
+            "type": "object",
+            "required": ["sourceId", "fields"],
+            "properties": {
+              "sourceId": {"type": "string", "minLength": 1},
+              "fields": {
+                "type": "array",
+                "minItems": 1,
+                "items": {"type": "string", "minLength": 1}
+              }
+            },
+            "additionalProperties": false
+          },
+          "purpose": {
+            "type": "string",
+            "enum": ["snapshot", "pre-merge-classification"]
+          },
+          "observedAt": {"type": "string", "minLength": 1},
+          "generated": {"type": "boolean"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

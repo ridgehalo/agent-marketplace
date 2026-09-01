@@ -1,0 +1,27 @@
+{
+  "kind": "ssotProjection",
+  "expectedError": "work-item.dependencies must use github-native-relationships",
+  "payload": {
+    "contractId": "engineering-delivery-ssot-v1",
+    "sources": [
+      {
+        "sourceId": "issue-body-dependencies",
+        "sourceKind": "issue-body",
+        "canonicalFor": ["work-item.dependencies"],
+        "generated": false
+      }
+    ],
+    "projections": [
+      {
+        "projectionId": "dependency-display",
+        "projectionOf": {
+          "sourceId": "issue-body-dependencies",
+          "fields": ["work-item.dependencies"]
+        },
+        "purpose": "snapshot",
+        "observedAt": "2026-09-01T00:00:00Z",
+        "generated": false
+      }
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 {
   "profileId": "personal-control-plane",
-  "contractVersion": "0.3.0",
-  "contractDigest": "3311d9e2bbe8fae5dcf0165f7536351609d3dde8cb2806eb370fb2e42cbb5985",
+  "contractVersion": "0.4.0",
+  "contractDigest": "34614ac71512dab0816b0f3c0be0b4ece382e56c9a867ae5bd78f0126c512c62",
   "trustDomain": "personal",
   "deliveryStream": "personal-delivery",
   "enabledContracts": [
@@ -10,7 +10,8 @@
     "contextAssemblyManifest",
     "deliveryEvent",
     "deliveryManifest",
-    "terminalReport"
+    "terminalReport",
+    "ssotProjection"
   ],
   "externalProjectionMode": "read-only",
   "stateStoreOwnership": "consumer",

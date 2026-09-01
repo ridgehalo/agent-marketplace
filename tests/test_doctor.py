@@ -31,7 +31,7 @@ class DoctorTest(unittest.TestCase):
         profile = ROOT / "plugins/engineering-delivery/profiles/personal-consumer.json"
         results = doctor.profile_checks(ROOT, [profile])
         self.assertEqual(results[0]["status"], "pass", results)
-        self.assertIn("contractVersion=0.3.0", results[0]["detail"])
+        self.assertIn("contractVersion=0.4.0", results[0]["detail"])
         self.assertIn("contractDigest=", results[0]["detail"])
         self.assertIn("contextLock=", results[0]["detail"])
 
@@ -56,7 +56,7 @@ class DoctorTest(unittest.TestCase):
                 """
                 import sys
                 if sys.argv[1:] == ["plugin", "list"]:
-                    print("engineering-delivery@ridgehalo 0.4.0")
+                    print("engineering-delivery@ridgehalo 0.5.0")
                     raise SystemExit(0)
                 raise SystemExit(2)
                 """,
@@ -74,7 +74,7 @@ class DoctorTest(unittest.TestCase):
                 if args == ["plugin", "list", "--json"]:
                     print(json.dumps([{{
                         "id": "engineering-delivery@ridgehalo",
-                        "version": "0.4.0",
+                        "version": "0.5.0",
                         "scope": "user",
                         "enabled": True
                     }}]))

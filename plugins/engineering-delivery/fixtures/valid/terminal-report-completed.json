@@ -1,0 +1,23 @@
+{
+  "kind": "terminalReport",
+  "payload": {
+    "outcome": "completed",
+    "heading": "## あなたにお願いしたいアクション",
+    "summary": ["Issueの実装、検証、PR作成が完了した"],
+    "requiredActions": [
+      {
+        "kind": "review",
+        "target": "作成したPull Request",
+        "operation": "変更内容をレビューする",
+        "reason": "mergeは人間が判断するHuman Gateのため",
+        "resumeCondition": "レビュー結果またはmerge結果を読み戻せたこと"
+      }
+    ],
+    "optionalSuggestions": ["次のAuto候補をProjectで確認する"],
+    "authorization": {
+      "sourceStateReadBack": true,
+      "standingAuthorizationValid": true,
+      "operationRequestMatched": true
+    }
+  }
+}

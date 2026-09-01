@@ -8,9 +8,9 @@
 | Codex CLI | `plugin marketplace add` / `plugin add` 対応version | `codex plugin list` read-back | CLIがある環境で確認 |
 | Claude Code | 2.1.149 | `plugin validate`、隔離configへのinstall、`plugin list --json`、`plugin details` | Gate前preflight済み |
 
-public delivery contractはplatform CLIに依存せずPython標準ライブラリで検証・compileする。現在のcontract version `0.2.2`をconsumer profileでpinし、plugin versionとは別に`doctor --profile`で古いcontract pinを拒否する。
+public delivery contractはplatform CLIに依存せずPython標準ライブラリで検証・compileする。現在のcontract version `0.3.0`をconsumer profileでpinし、plugin versionとは別に`doctor --profile`で古いcontract pinを拒否する。
 
-現在のcontract digest `caf6ad24dc819d01c61fbd3a7950a2f50dde8969e0e7dec4240e52b32ef4130a`は、manifest、schema、template、validator / compilerの内容から決定する。consumer profileはこのdigestをpinし、変更時にdigest、generated docs、CHANGELOG、互換性宣言が揃わなければCIを失敗させる。
+現在のcontract digest `9c3e7591788d69801e383c312f01f49744c74d7d59fea21935de42a740249988`は、manifest、schema、template、validator / compilerの内容から決定する。consumer profileはこのdigestをpinし、変更時にdigest、generated docs、CHANGELOG、互換性宣言が揃わなければCIを失敗させる。
 
 version依存の高度なClaude marketplace機能は初期versionで使いません。相対plugin source、明示version、local / GitHub marketplaceという基本機能だけを使います。
 

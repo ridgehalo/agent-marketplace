@@ -1,0 +1,16 @@
+{
+  "kind": "terminalReport",
+  "expectedError": "terminalReport.noActionMessage is required",
+  "payload": {
+    "outcome": "completed",
+    "heading": "## あなたにお願いしたいアクション",
+    "summary": ["処理が完了した"],
+    "requiredActions": [],
+    "optionalSuggestions": [],
+    "authorization": {
+      "sourceStateReadBack": true,
+      "standingAuthorizationValid": false,
+      "operationRequestMatched": false
+    }
+  }
+}

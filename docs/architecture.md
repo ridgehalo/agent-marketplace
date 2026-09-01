@@ -59,6 +59,7 @@ hooks、MCP、subagents、認証、permission設定はskill本文へ埋め込ま
 | public release | secret scan、manifest検証、clean clone検証後だけtagを作る |
 | cross-domain projection | source revision / observed time必須。raw private stateを複製しない |
 | promotion | allowed fields / redaction class / approval recordを固定する |
+| terminal reporting | 必須Actionと任意提案を分離し、操作不要時も固定見出しを残す |
 
 ## 失敗時の原則
 

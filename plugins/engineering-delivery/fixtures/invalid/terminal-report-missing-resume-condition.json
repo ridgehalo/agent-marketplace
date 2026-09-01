@@ -1,0 +1,23 @@
+{
+  "kind": "terminalReport",
+  "expectedError": "terminalReport.requiredActions[0].resumeCondition is required",
+  "payload": {
+    "outcome": "stopped",
+    "heading": "## あなたにお願いしたいアクション",
+    "summary": ["レビュー待ちで停止した"],
+    "requiredActions": [
+      {
+        "kind": "review",
+        "target": "Pull Request",
+        "operation": "レビューする",
+        "reason": "merge判断が必要なため"
+      }
+    ],
+    "optionalSuggestions": [],
+    "authorization": {
+      "sourceStateReadBack": true,
+      "standingAuthorizationValid": false,
+      "operationRequestMatched": false
+    }
+  }
+}

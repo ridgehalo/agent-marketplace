@@ -1,0 +1,16 @@
+{
+  "kind": "terminalReport",
+  "payload": {
+    "outcome": "waiting",
+    "heading": "## あなたにお願いしたいアクション",
+    "summary": ["現在のrunで処理できる対象はなく、次回scanを待つ"],
+    "requiredActions": [],
+    "optionalSuggestions": [],
+    "noActionMessage": "ありません。外部状態が変わるまで待機します。",
+    "authorization": {
+      "sourceStateReadBack": true,
+      "standingAuthorizationValid": true,
+      "operationRequestMatched": true
+    }
+  }
+}

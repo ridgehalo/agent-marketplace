@@ -4,9 +4,9 @@
 
 ## Version
 
-`0.2.2`
+`0.3.0`
 
-Contract digest: `caf6ad24dc819d01c61fbd3a7950a2f50dde8969e0e7dec4240e52b32ef4130a`
+Contract digest: `9c3e7591788d69801e383c312f01f49744c74d7d59fea21935de42a740249988`
 
 ## Gates
 
@@ -35,6 +35,22 @@ Contract digest: `caf6ad24dc819d01c61fbd3a7950a2f50dde8969e0e7dec4240e52b32ef413
 `auto`の除外対象: merge, deployment, publication, payment, permission-change
 
 Goal Modeが未設定の場合: `excluded`
+
+## Terminal reporting
+
+固定見出し: `## あなたにお願いしたいアクション`
+
+必須Actionのfield: `target` / `operation` / `reason` / `resumeCondition`
+
+必須Actionのkind: human-gate, decision, external-input, review
+
+Actionがない場合の明示文:
+
+- `ありません。今回の処理は完了です。`
+- `ありません。外部状態が変わるまで待機します。`
+
+任意の提案は必須Actionから分離する。現在のsource stateをlive read-backし、standing
+authorizationとOperation Requestが一致するroutine writeを再承認依頼しない。
 
 ## Reviewer output
 
@@ -70,6 +86,7 @@ Goal Modeが未設定の場合: `excluded`
 | `deliveryEvent` | `contracts/schemas/delivery-event.schema.json` |
 | `deliveryManifest` | `contracts/schemas/delivery-manifest.schema.json` |
 | `consumerProfile` | `contracts/schemas/consumer-profile.schema.json` |
+| `terminalReport` | `contracts/schemas/terminal-report.schema.json` |
 
 ## Templates
 

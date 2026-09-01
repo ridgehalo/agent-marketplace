@@ -24,7 +24,21 @@ class DeliveryContractTest(unittest.TestCase):
         self.assertEqual(manifest["unsetGoalModeSelection"], "excluded")
         self.assertIn("repository-write", manifest["goalModes"]["auto"]["authorizes"])
         self.assertIn("merge", manifest["goalModes"]["auto"]["excludes"])
-        self.assertEqual(manifest["contractVersion"], "0.2.2")
+        self.assertEqual(manifest["contractVersion"], "0.3.0")
+        terminal_reporting = manifest["terminalReporting"]
+        self.assertEqual(
+            terminal_reporting["heading"],
+            "## あなたにお願いしたいアクション",
+        )
+        self.assertEqual(
+            terminal_reporting["requiredActionFields"],
+            ["target", "operation", "reason", "resumeCondition"],
+        )
+        self.assertEqual(
+            terminal_reporting["actionKinds"],
+            ["human-gate", "decision", "external-input", "review"],
+        )
+        self.assertIn("terminalReport", manifest["schemas"])
         template_contract = manifest["templateContract"]
         self.assertEqual(template_contract["version"], "1.0.0")
         self.assertEqual(
@@ -263,6 +277,127 @@ class DeliveryContractTest(unittest.TestCase):
                 json.loads(compile_result.stdout)["contractDigest"],
                 contracts.load_manifest(ROOT)["contractDigest"],
             )
+            self.assertEqual(
+                json.loads(compile_result.stdout)["terminalReporting"]["heading"],
+                "## あなたにお願いしたいアクション",
+            )
+
+    def test_終端報告の完了_停止_操作なしfixtureを受理する(self) -> None:
+        manifest = contracts.load_manifest(ROOT)
+        fixture_root = ROOT / "plugins/engineering-delivery/fixtures/valid"
+
+        for name in (
+            "terminal-report-completed.json",
+            "terminal-report-stopped.json",
+            "terminal-report-no-action.json",
+        ):
+            with self.subTest(fixture=name):
+                fixture = json.loads((fixture_root / name).read_text(encoding="utf-8"))
+                self.assertEqual(
+                    contracts.validate_payload(
+                        fixture["kind"], fixture["payload"], manifest
+                    ),
+                    [],
+                )
+
+    def test_終端報告skillが固定形式と再承認防止を要求する(self) -> None:
+        required_terms = (
+            "## あなたにお願いしたいアクション",
+            "対象",
+            "操作",
+            "理由",
+            "再開条件",
+            "任意の提案",
+            "standing authorization",
+            "live read-back",
+        )
+        for skill_name in ("issue-to-pr", "pr-self-review"):
+            skill = (
+                ROOT
+                / "plugins/engineering-delivery/skills"
+                / skill_name
+                / "SKILL.md"
+            ).read_text(encoding="utf-8")
+            with self.subTest(skill=skill_name):
+                for term in required_terms:
+                    self.assertIn(term, skill)
+
+    def test_操作なし報告に明示文がなければ拒否する(self) -> None:
+        manifest = contracts.load_manifest(ROOT)
+        fixture = {
+            "outcome": "completed",
+            "heading": "## あなたにお願いしたいアクション",
+            "summary": ["処理が完了した"],
+            "requiredActions": [],
+            "optionalSuggestions": [],
+            "authorization": {
+                "sourceStateReadBack": True,
+                "standingAuthorizationValid": False,
+                "operationRequestMatched": False,
+            },
+        }
+
+        errors = contracts.validate_payload("terminalReport", fixture, manifest)
+
+        self.assertTrue(any("noActionMessage" in error for error in errors), errors)
+
+    def test_routine_writeを必須Actionとして再承認依頼できない(self) -> None:
+        manifest = contracts.load_manifest(ROOT)
+        fixture = {
+            "outcome": "stopped",
+            "heading": "## あなたにお願いしたいアクション",
+            "summary": ["処理を停止した"],
+            "requiredActions": [
+                {
+                    "kind": "routine-write",
+                    "target": "Issue",
+                    "operation": "本文を更新する",
+                    "reason": "進捗を記録する",
+                    "resumeCondition": "更新を確認できたこと",
+                }
+            ],
+            "optionalSuggestions": [],
+            "authorization": {
+                "sourceStateReadBack": True,
+                "standingAuthorizationValid": True,
+                "operationRequestMatched": True,
+            },
+        }
+
+        errors = contracts.validate_payload("terminalReport", fixture, manifest)
+
+        self.assertTrue(any("kind" in error for error in errors), errors)
+
+    def test_終端報告はsource_stateのread_backを必須にする(self) -> None:
+        manifest = contracts.load_manifest(ROOT)
+        fixture = json.loads(
+            (
+                ROOT
+                / "plugins/engineering-delivery/fixtures/valid/terminal-report-no-action.json"
+            ).read_text(encoding="utf-8")
+        )["payload"]
+        fixture["authorization"]["sourceStateReadBack"] = False
+
+        errors = contracts.validate_payload("terminalReport", fixture, manifest)
+
+        self.assertTrue(any("sourceStateReadBack" in error for error in errors), errors)
+
+    def test_operation_request一致だけではstanding_authorizationにならない(self) -> None:
+        manifest = contracts.load_manifest(ROOT)
+        fixture = json.loads(
+            (
+                ROOT
+                / "plugins/engineering-delivery/fixtures/valid/terminal-report-no-action.json"
+            ).read_text(encoding="utf-8")
+        )["payload"]
+        fixture["authorization"]["standingAuthorizationValid"] = False
+        fixture["authorization"]["operationRequestMatched"] = True
+
+        errors = contracts.validate_payload("terminalReport", fixture, manifest)
+
+        self.assertTrue(
+            any("operationRequestMatched" in error for error in errors), errors
+        )
 
     def test_skill_promotion_policy_is_validated(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -301,13 +436,13 @@ class DeliveryContractTest(unittest.TestCase):
             shutil.copytree(ROOT, candidate, ignore=shutil.ignore_patterns(".git", "__pycache__"))
             changelog = candidate / "CHANGELOG.md"
             changelog.write_text(
-                changelog.read_text(encoding="utf-8").replace("[0.3.3]", "[removed]"),
+                changelog.read_text(encoding="utf-8").replace("[0.4.0]", "[removed]"),
                 encoding="utf-8",
             )
             compatibility = candidate / "docs/compatibility.md"
             compatibility.write_text(
                 compatibility.read_text(encoding="utf-8").replace(
-                    "contract version `0.2.2`", "contract version is missing"
+                    "contract version `0.3.0`", "contract version is missing"
                 ),
                 encoding="utf-8",
             )

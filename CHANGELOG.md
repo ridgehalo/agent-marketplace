@@ -4,6 +4,16 @@
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-09-01
+
+contract-digest: 9c3e7591788d69801e383c312f01f49744c74d7d59fea21935de42a740249988
+
+### Added
+
+- 完了・停止時の人間Actionを表す公開terminal reporting contractとJSON schema
+- 固定見出し、必須Action field、操作なし、standing authorizationのfixtureとvalidator
+- `issue-to-pr`と`pr-self-review`の共通終端報告形式
+
 ## [0.3.3] - 2026-08-31
 
 contract-digest: caf6ad24dc819d01c61fbd3a7950a2f50dde8969e0e7dec4240e52b32ef4130a

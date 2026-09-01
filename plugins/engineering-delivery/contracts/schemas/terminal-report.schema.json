@@ -64,7 +64,10 @@
         "operationRequestMatched"
       ],
       "properties": {
-        "sourceStateReadBack": {"type": "boolean"},
+        "sourceStateReadBack": {
+          "type": "string",
+          "enum": ["succeeded", "failed", "not-applicable"]
+        },
         "standingAuthorizationValid": {"type": "boolean"},
         "operationRequestMatched": {"type": "boolean"}
       }

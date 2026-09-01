@@ -8,7 +8,7 @@
     "requiredActions": [],
     "optionalSuggestions": [],
     "authorization": {
-      "sourceStateReadBack": true,
+      "sourceStateReadBack": "succeeded",
       "standingAuthorizationValid": false,
       "operationRequestMatched": false
     }

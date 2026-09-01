@@ -6,7 +6,7 @@
 
 `0.3.0`
 
-Contract digest: `9c3e7591788d69801e383c312f01f49744c74d7d59fea21935de42a740249988`
+Contract digest: `3311d9e2bbe8fae5dcf0165f7536351609d3dde8cb2806eb370fb2e42cbb5985`
 
 ## Gates
 

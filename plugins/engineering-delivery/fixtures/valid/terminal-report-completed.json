@@ -15,7 +15,7 @@
     ],
     "optionalSuggestions": ["次のAuto候補をProjectで確認する"],
     "authorization": {
-      "sourceStateReadBack": true,
+      "sourceStateReadBack": "succeeded",
       "standingAuthorizationValid": true,
       "operationRequestMatched": true
     }

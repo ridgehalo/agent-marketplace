@@ -290,6 +290,7 @@ class DeliveryContractTest(unittest.TestCase):
             "terminal-report-completed.json",
             "terminal-report-stopped.json",
             "terminal-report-no-action.json",
+            "terminal-report-readback-failed.json",
         ):
             with self.subTest(fixture=name):
                 fixture = json.loads((fixture_root / name).read_text(encoding="utf-8"))
@@ -331,7 +332,7 @@ class DeliveryContractTest(unittest.TestCase):
             "requiredActions": [],
             "optionalSuggestions": [],
             "authorization": {
-                "sourceStateReadBack": True,
+                "sourceStateReadBack": "succeeded",
                 "standingAuthorizationValid": False,
                 "operationRequestMatched": False,
             },
@@ -358,7 +359,7 @@ class DeliveryContractTest(unittest.TestCase):
             ],
             "optionalSuggestions": [],
             "authorization": {
-                "sourceStateReadBack": True,
+                "sourceStateReadBack": "succeeded",
                 "standingAuthorizationValid": True,
                 "operationRequestMatched": True,
             },
@@ -368,7 +369,7 @@ class DeliveryContractTest(unittest.TestCase):
 
         self.assertTrue(any("kind" in error for error in errors), errors)
 
-    def test_終端報告はsource_stateのread_backを必須にする(self) -> None:
+    def test_standing_authorizationにはsource_stateのread_back成功を必須にする(self) -> None:
         manifest = contracts.load_manifest(ROOT)
         fixture = json.loads(
             (
@@ -376,11 +377,24 @@ class DeliveryContractTest(unittest.TestCase):
                 / "plugins/engineering-delivery/fixtures/valid/terminal-report-no-action.json"
             ).read_text(encoding="utf-8")
         )["payload"]
-        fixture["authorization"]["sourceStateReadBack"] = False
+        fixture["authorization"]["sourceStateReadBack"] = "failed"
 
         errors = contracts.validate_payload("terminalReport", fixture, manifest)
 
         self.assertTrue(any("sourceStateReadBack" in error for error in errors), errors)
+
+    def test_source_stateのread_back失敗を停止報告として表現できる(self) -> None:
+        manifest = contracts.load_manifest(ROOT)
+        fixture = json.loads(
+            (
+                ROOT
+                / "plugins/engineering-delivery/fixtures/valid/terminal-report-readback-failed.json"
+            ).read_text(encoding="utf-8")
+        )["payload"]
+
+        errors = contracts.validate_payload("terminalReport", fixture, manifest)
+
+        self.assertEqual(errors, [])
 
     def test_operation_request一致だけではstanding_authorizationにならない(self) -> None:
         manifest = contracts.load_manifest(ROOT)

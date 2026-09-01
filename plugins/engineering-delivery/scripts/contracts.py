@@ -243,9 +243,13 @@ def validate_payload(
                 )
         authorization = payload.get("authorization")
         if isinstance(authorization, dict):
-            if authorization.get("sourceStateReadBack") is not True:
+            if (
+                authorization.get("standingAuthorizationValid") is True
+                and authorization.get("sourceStateReadBack") != "succeeded"
+            ):
                 errors.append(
-                    "terminalReport.authorization.sourceStateReadBack must be true"
+                    "terminalReport.authorization.sourceStateReadBack must succeed "
+                    "for standing authorization"
                 )
             if (
                 authorization.get("operationRequestMatched") is True

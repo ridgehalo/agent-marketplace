@@ -1,6 +1,6 @@
 {
   "contractVersion": "0.3.0",
-  "contractDigest": "9c3e7591788d69801e383c312f01f49744c74d7d59fea21935de42a740249988",
+  "contractDigest": "3311d9e2bbe8fae5dcf0165f7536351609d3dde8cb2806eb370fb2e42cbb5985",
   "gates": ["plan", "build", "verify", "release"],
   "riskRouting": {
     "low": {"reviewers": 0, "humanRequired": false},

@@ -8,7 +8,7 @@
     "optionalSuggestions": [],
     "noActionMessage": "ありません。外部状態が変わるまで待機します。",
     "authorization": {
-      "sourceStateReadBack": true,
+      "sourceStateReadBack": "succeeded",
       "standingAuthorizationValid": true,
       "operationRequestMatched": true
     }

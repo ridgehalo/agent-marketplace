@@ -1,0 +1,23 @@
+{
+  "kind": "terminalReport",
+  "payload": {
+    "outcome": "stopped",
+    "heading": "## あなたにお願いしたいアクション",
+    "summary": ["認証エラーによりGitHubのsource stateを読み戻せなかった"],
+    "requiredActions": [
+      {
+        "kind": "external-input",
+        "target": "GitHub認証",
+        "operation": "対象repositoryを読める認証状態へ戻す",
+        "reason": "source stateを確認できず安全に再開できないため",
+        "resumeCondition": "Issue、PR、Projectをlive read-backできたこと"
+      }
+    ],
+    "optionalSuggestions": [],
+    "authorization": {
+      "sourceStateReadBack": "failed",
+      "standingAuthorizationValid": false,
+      "operationRequestMatched": false
+    }
+  }
+}

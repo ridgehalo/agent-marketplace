@@ -8,7 +8,7 @@
     "optionalSuggestions": [],
     "noActionMessage": "ありません。今回の処理は完了です。",
     "authorization": {
-      "sourceStateReadBack": true,
+      "sourceStateReadBack": "succeeded",
       "standingAuthorizationValid": false,
       "operationRequestMatched": false
     }

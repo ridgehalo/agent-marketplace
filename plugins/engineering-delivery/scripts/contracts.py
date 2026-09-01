@@ -221,6 +221,45 @@ def validate_payload(
         if payload.get("stateStoreOwnership") != "consumer":
             errors.append("consumerProfile.stateStoreOwnership must be consumer")
 
+    if kind == "terminalReport":
+        terminal_contract = manifest.get("terminalReporting")
+        if not isinstance(terminal_contract, dict):
+            errors.append("terminalReporting contract is required")
+            return errors
+        if payload.get("heading") != terminal_contract.get("heading"):
+            errors.append("terminalReport.heading must match the fixed heading")
+        actions = payload.get("requiredActions")
+        no_action_message = payload.get("noActionMessage")
+        if isinstance(actions, list):
+            if actions and no_action_message is not None:
+                errors.append(
+                    "terminalReport.noActionMessage must be omitted when actions exist"
+                )
+            if not actions and no_action_message not in terminal_contract.get(
+                "noActionMessages", []
+            ):
+                errors.append(
+                    "terminalReport.noActionMessage is required when no actions exist"
+                )
+        authorization = payload.get("authorization")
+        if isinstance(authorization, dict):
+            if (
+                authorization.get("standingAuthorizationValid") is True
+                and authorization.get("sourceStateReadBack") != "succeeded"
+            ):
+                errors.append(
+                    "terminalReport.authorization.sourceStateReadBack must succeed "
+                    "for standing authorization"
+                )
+            if (
+                authorization.get("operationRequestMatched") is True
+                and authorization.get("standingAuthorizationValid") is not True
+            ):
+                errors.append(
+                    "terminalReport.authorization.operationRequestMatched requires "
+                    "standingAuthorizationValid"
+                )
+
     return errors
 
 
@@ -243,6 +282,7 @@ def compile_profile(profile_path: Path, root: Path = ROOT) -> dict[str, Any]:
         "riskRouting": manifest["riskRouting"],
         "goalModes": manifest["goalModes"],
         "unsetGoalModeSelection": manifest["unsetGoalModeSelection"],
+        "terminalReporting": manifest["terminalReporting"],
         "reviewerOutputFields": manifest["reviewerOutputFields"],
         "testInfrastructureRequirements": manifest[
             "testInfrastructureRequirements"
@@ -287,6 +327,13 @@ def render_docs(root: Path = ROOT) -> str:
     )
     gates = " → ".join(f"`{gate}`" for gate in manifest["gates"])
     promotion = manifest["skillPromotionPolicy"]
+    terminal = manifest["terminalReporting"]
+    terminal_fields = " / ".join(
+        f"`{item}`" for item in terminal["requiredActionFields"]
+    )
+    no_action_messages = "\n".join(
+        f"- `{item}`" for item in terminal["noActionMessages"]
+    )
     return f"""# Engineering Delivery Contract
 
 この文書は `contracts/manifest.json` から生成する。手動編集しない。
@@ -319,6 +366,21 @@ Contract digest: `{manifest['contractDigest']}`
 `auto`の除外対象: {', '.join(manifest['goalModes']['auto']['excludes'])}
 
 Goal Modeが未設定の場合: `{manifest['unsetGoalModeSelection']}`
+
+## Terminal reporting
+
+固定見出し: `{terminal['heading']}`
+
+必須Actionのfield: {terminal_fields}
+
+必須Actionのkind: {', '.join(terminal['actionKinds'])}
+
+Actionがない場合の明示文:
+
+{no_action_messages}
+
+任意の提案は必須Actionから分離する。現在のsource stateをlive read-backし、standing
+authorizationとOperation Requestが一致するroutine writeを再承認依頼しない。
 
 ## Reviewer output
 
@@ -509,6 +571,24 @@ def validate_contracts(root: Path = ROOT) -> list[str]:
             errors.append("goalModes.auto is missing release exclusions")
     if manifest.get("unsetGoalModeSelection") != "excluded":
         errors.append("unsetGoalModeSelection must be excluded")
+    terminal = manifest.get("terminalReporting")
+    expected_terminal = {
+        "heading": "## あなたにお願いしたいアクション",
+        "requiredActionFields": [
+            "target",
+            "operation",
+            "reason",
+            "resumeCondition",
+        ],
+        "actionKinds": ["human-gate", "decision", "external-input", "review"],
+        "noActionMessages": [
+            "ありません。今回の処理は完了です。",
+            "ありません。外部状態が変わるまで待機します。",
+        ],
+        "standingAuthorizationRule": "live-read-back-and-operation-request-match",
+    }
+    if terminal != expected_terminal:
+        errors.append("terminalReporting contract is incomplete")
     if manifest.get("reviewerOutputFields") != [
         "severity",
         "condition",

@@ -63,3 +63,16 @@ repoの永続指示、linked Issue、PR本文、review comments、Issue comments
 - 人間判断が必要な公開、権限、仕様、残リスクが短く整理されている
 
 mergeは行わない。mergeabilityやgreen checksだけで人間review不要と判断しない。
+
+## 終端報告
+
+セルフレビューが完了または停止したときは、findingsと再検証結果を先に示し、その後に固定見出し
+`## あなたにお願いしたいアクション`を必ず置く。
+
+- 必須Actionには`対象`、`操作`、`理由`、`再開条件`を含める。
+- `任意の提案`は必須Actionから分離する。
+- 操作がなければ`ありません。今回の処理は完了です。`または
+  `ありません。外部状態が変わるまで待機します。`と明記する。
+- 現在のsource stateをlive read-backし、standing authorizationとOperation Requestが
+  一致するroutine writeを新しい承認依頼へ戻さない。
+- merge、公開、権限、仕様判断など、未承認のHuman Gateだけを必須Actionにする。

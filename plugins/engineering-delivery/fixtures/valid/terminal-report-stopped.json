@@ -1,0 +1,23 @@
+{
+  "kind": "terminalReport",
+  "payload": {
+    "outcome": "stopped",
+    "heading": "## あなたにお願いしたいアクション",
+    "summary": ["仕様判断が必要なため実装前に停止した"],
+    "requiredActions": [
+      {
+        "kind": "decision",
+        "target": "対象Issueの受入条件",
+        "operation": "採用する仕様を選択する",
+        "reason": "選択によって成果物と検証方法が変わるため",
+        "resumeCondition": "選択結果がIssueへ記録されたこと"
+      }
+    ],
+    "optionalSuggestions": [],
+    "authorization": {
+      "sourceStateReadBack": "succeeded",
+      "standingAuthorizationValid": false,
+      "operationRequestMatched": false
+    }
+  }
+}

@@ -14,10 +14,9 @@ assignees: ""
 
 ### Work Routing
 
-- Product:
+- Product scope: <!-- Outcome仕様として記述する。ProjectのProduct field現在値は複製しない。 -->
 - Work Type: `implementation | documentation | research`
 - Target Repository:
-- Goal Mode: `Manual | Auto | Hold`
 
 ## 2. 背景
 
@@ -111,18 +110,21 @@ assignees: ""
 
 - <!-- 今回行わないことを書きます。 -->
 
-## Project Status
+## Project
 
-- Status: `Todo`
-- Priority:
-- Codex Priority: `C2`
-- Area:
-- Product:
+- 管理先:
+- `Status`、`Priority`、`Codex Priority`、`Goal Mode`等の現在値はGitHub Projectを正本とし、本文へ複製しない
+
+### Optional Project Snapshot
+
+- Observed at: <!-- RFC 3339。snapshotを残さない場合はこの節ごと削除する。 -->
+- Projection of: <!-- Project URLとfield名。 -->
+- Snapshot: <!-- 作成時点の非正本snapshotであり、現在値ではない。 -->
 
 ### 関連Issue / PR
 
-- Parent:
-- Blocked by:
-- Blocks:
-- Related:
+dependencyとparent / childの正本はnative Relationshipsとし、本文リンクは説明用の投影として扱う。
+
+- Native Relationships: <!-- GitHub UI / APIで管理し、現在の一覧は本文へ複製しない。 -->
+- Related context:
 - Existing PR:

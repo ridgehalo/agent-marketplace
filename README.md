@@ -14,7 +14,7 @@ Codexを主系として、複数リポジトリで再利用できるagent plugin
 
 ## Plugins
 
-### `engineering-delivery` 0.4.0
+### `engineering-delivery` 0.5.0
 
 - public contract: 4 Gate、risk routing、Evidence、cross-domain reference
 - templates: Issue、Plan、Test Intent、Reviewer、PR Evidence
@@ -24,6 +24,7 @@ Codexを主系として、複数リポジトリで再利用できるagent plugin
 - `loop-review`: 高リスク差分を同じ観点で複数ラウンド確認する
 - `dev-experience-evidence`: UI確認前に再現可能な画面・操作証跡を残す
 - terminal reporting: 完了・停止時の人間Actionを固定見出しと機械検査可能なfieldで返す
+- SSOT projection: current state、timestamp付きsnapshot、merge前classificationを分離し、二重正本と本文dependencyを拒否する
 
 初期versionはskills-onlyです。hooks、MCP servers、apps、外部認証、自動外部書き込みを含みません。
 
@@ -110,6 +111,8 @@ python3 scripts/contracts.py compile --profile profiles/product-consumer.json
 - promotionは許可fieldとredaction classを固定する
 - generated docsのdrift、古いcontract pin、invalid fixtureはCIで拒否する
 - 必須Actionは対象、操作、理由、再開条件を持ち、操作不要時も明示文を返す
+- Projectのmutableな現在値はconsumer側Projectを正本とし、Issue / PR本文へ複製しない
+- dependencyとparent / childはnative Relationshipsを正本とする
 
 ## 更新とversion固定
 

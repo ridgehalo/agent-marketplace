@@ -17,6 +17,9 @@ SEMVER = re.compile(
     r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)"
     r"(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$"
 )
+RFC3339_UTC = re.compile(
+    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$"
+)
 
 
 def read_json(path: Path) -> Any:
@@ -260,6 +263,97 @@ def validate_payload(
                     "standingAuthorizationValid"
                 )
 
+    if kind == "ssotProjection":
+        sources = payload.get("sources")
+        projections = payload.get("projections")
+        source_by_id: dict[str, dict[str, Any]] = {}
+        field_owner: dict[str, str] = {}
+        if isinstance(sources, list):
+            for index, source in enumerate(sources):
+                if not isinstance(source, dict):
+                    continue
+                source_id = source.get("sourceId")
+                if isinstance(source_id, str):
+                    if source_id in source_by_id:
+                        errors.append(
+                            f"ssotProjection.sources[{index}].sourceId must be unique"
+                        )
+                    source_by_id[source_id] = source
+                canonical_fields = source.get("canonicalFor")
+                if not isinstance(canonical_fields, list):
+                    continue
+                for field in canonical_fields:
+                    if not isinstance(field, str):
+                        continue
+                    if field in field_owner:
+                        errors.append(
+                            "ssotProjection.sources.canonicalFor must be unique: "
+                            + field
+                        )
+                    elif isinstance(source_id, str):
+                        field_owner[field] = source_id
+                    if (
+                        field == "work-item.dependencies"
+                        and source.get("sourceKind")
+                        != "github-native-relationships"
+                    ):
+                        errors.append(
+                            "ssotProjection work-item.dependencies must use "
+                            "github-native-relationships"
+                        )
+
+        if isinstance(projections, list):
+            projection_ids: set[str] = set()
+            for index, projection in enumerate(projections):
+                if not isinstance(projection, dict):
+                    continue
+                projection_id = projection.get("projectionId")
+                if isinstance(projection_id, str):
+                    if projection_id in projection_ids:
+                        errors.append(
+                            f"ssotProjection.projections[{index}].projectionId "
+                            "must be unique"
+                        )
+                    projection_ids.add(projection_id)
+                observed_at = projection.get("observedAt")
+                if (
+                    isinstance(observed_at, str)
+                    and not RFC3339_UTC.fullmatch(observed_at)
+                ):
+                    errors.append(
+                        f"ssotProjection.projections[{index}].observedAt "
+                        "must be RFC 3339 UTC"
+                    )
+                projection_of = projection.get("projectionOf")
+                if not isinstance(projection_of, dict):
+                    continue
+                source_id = projection_of.get("sourceId")
+                if isinstance(source_id, str) and source_id not in source_by_id:
+                    errors.append(
+                        f"ssotProjection.projections[{index}].projectionOf.sourceId "
+                        "must reference a source"
+                    )
+                fields = projection_of.get("fields")
+                if not isinstance(fields, list):
+                    continue
+                for field in fields:
+                    if not isinstance(field, str):
+                        continue
+                    if field_owner.get(field) != source_id:
+                        errors.append(
+                            f"ssotProjection.projections[{index}] field {field} "
+                            "must be owned by projectionOf.sourceId"
+                        )
+                    if (
+                        field == "workflow.current-status"
+                        and projection.get("purpose")
+                        == "pre-merge-classification"
+                    ):
+                        errors.append(
+                            "ssotProjection workflow.current-status cannot be "
+                            "pre-merge-classification"
+                        )
+
     return errors
 
 
@@ -283,6 +377,7 @@ def compile_profile(profile_path: Path, root: Path = ROOT) -> dict[str, Any]:
         "goalModes": manifest["goalModes"],
         "unsetGoalModeSelection": manifest["unsetGoalModeSelection"],
         "terminalReporting": manifest["terminalReporting"],
+        "ssotProjection": manifest["ssotProjection"],
         "reviewerOutputFields": manifest["reviewerOutputFields"],
         "testInfrastructureRequirements": manifest[
             "testInfrastructureRequirements"
@@ -334,6 +429,10 @@ def render_docs(root: Path = ROOT) -> str:
     no_action_messages = "\n".join(
         f"- `{item}`" for item in terminal["noActionMessages"]
     )
+    ssot = manifest["ssotProjection"]
+    current_state_fields = "\n".join(
+        f"- `{item}`" for item in ssot["currentStateFields"]
+    )
     return f"""# Engineering Delivery Contract
 
 この文書は `contracts/manifest.json` から生成する。手動編集しない。
@@ -381,6 +480,22 @@ Actionがない場合の明示文:
 
 任意の提案は必須Actionから分離する。現在のsource stateをlive read-backし、standing
 authorizationとOperation Requestが一致するroutine writeを再承認依頼しない。
+
+## SSOT projection
+
+mutableな現在値と本文へ残す投影を区別する。
+
+現在値として扱うfield:
+
+{current_state_fields}
+
+- current stateの正本はconsumerが指定するGitHub Projectとする
+- dependencyのfield `{ssot['relationshipField']}` は
+  `{ssot['relationshipSourceKind']}`だけが正本になれる
+- PR本文の`{ssot['classificationField']}`はmerge前classificationであり、
+  Project current statusではない
+- 投影には`projectionOf`、`observedAt`、`generated`を必須にする
+- Issue / PR本文のmutableなsnapshotを現在値として扱わない
 
 ## Reviewer output
 
@@ -589,6 +704,24 @@ def validate_contracts(root: Path = ROOT) -> list[str]:
     }
     if terminal != expected_terminal:
         errors.append("terminalReporting contract is incomplete")
+    expected_ssot = {
+        "currentStateFields": [
+            "workflow.current-status",
+            "workflow.priority",
+            "workflow.goal-mode",
+        ],
+        "classificationField": "pull-request.pre-merge-classification",
+        "relationshipField": "work-item.dependencies",
+        "relationshipSourceKind": "github-native-relationships",
+        "projectionPurposes": ["snapshot", "pre-merge-classification"],
+        "requiredProjectionFields": [
+            "projectionOf",
+            "observedAt",
+            "generated",
+        ],
+    }
+    if manifest.get("ssotProjection") != expected_ssot:
+        errors.append("ssotProjection contract is incomplete")
     if manifest.get("reviewerOutputFields") != [
         "severity",
         "condition",

@@ -23,6 +23,10 @@ Issue本文から次を取り出す。
 - relationshipと既存PR
 - 要求ごとの検証証拠
 
+dependencyとparent / childはnative Relationshipsを正本とし、Issue本文のリンクだけで
+ready判定しない。`Status`、`Priority`、`Goal Mode`等のmutableなProject現在値は本文へ
+複製せず、必要なsnapshotには投影元と`observed_at`を記録する。
+
 plugin内に `contracts/manifest.json` がある場合は、利用repositoryの規約を上書きせず、公開contract version、risk routing、Evidence typeを解決する。Issue、Plan、Test Intent、Reviewer、PR Evidenceの雛形は `templates/` を使い、consumer固有値を公開coreへ書き戻さない。
 
 chat上の調査結果だけで完了としない。IssueがPRまでの実装を求めるなら、branch、変更、検証、commit、push、PR作成、read-backまでが完了条件になる。
@@ -72,7 +76,9 @@ Issueがduplicate、obsolete、すでに完了、または意味のある成果�
 Closes https://github.com/OWNER/REPO/issues/NUMBER
 ```
 
-Issueを完全には満たさないPRで `Closes` を使わない。Project固有statusや自動merge分類は利用repoの指示がある場合だけ追加する。
+Issueを完全には満たさないPRで `Closes` を使わない。Project固有のcurrent statusはProjectを
+正本とする。PR本文へ自動merge分類を残す場合は、merge前classificationとして投影元と
+`observed_at`を記録し、merge後の現在値だと主張しない。
 
 ## 引き渡し
 

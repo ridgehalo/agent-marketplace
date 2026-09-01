@@ -24,7 +24,8 @@ class DeliveryContractTest(unittest.TestCase):
         self.assertEqual(manifest["unsetGoalModeSelection"], "excluded")
         self.assertIn("repository-write", manifest["goalModes"]["auto"]["authorizes"])
         self.assertIn("merge", manifest["goalModes"]["auto"]["excludes"])
-        self.assertEqual(manifest["contractVersion"], "0.3.0")
+        self.assertEqual(manifest["contractVersion"], "0.4.0")
+        self.assertIn("ssotProjection", manifest["schemas"])
         terminal_reporting = manifest["terminalReporting"]
         self.assertEqual(
             terminal_reporting["heading"],
@@ -413,6 +414,94 @@ class DeliveryContractTest(unittest.TestCase):
             any("operationRequestMatched" in error for error in errors), errors
         )
 
+    def test_ssot_projectionの正本とtimestamp付き投影を受理する(self) -> None:
+        manifest = contracts.load_manifest(ROOT)
+        fixture = json.loads(
+            (
+                ROOT
+                / "plugins/engineering-delivery/fixtures/valid/ssot-projection.json"
+            ).read_text(encoding="utf-8")
+        )
+
+        errors = contracts.validate_payload(
+            fixture["kind"], fixture["payload"], manifest
+        )
+
+        self.assertEqual(errors, [])
+
+    def test_ssot_projectionで同一fieldの二重正本を拒否する(self) -> None:
+        manifest = contracts.load_manifest(ROOT)
+        fixture = json.loads(
+            (
+                ROOT
+                / "plugins/engineering-delivery/fixtures/valid/ssot-projection.json"
+            ).read_text(encoding="utf-8")
+        )["payload"]
+        fixture["sources"].append(
+            {
+                "sourceId": "duplicate-project",
+                "sourceKind": "github-project",
+                "canonicalFor": ["workflow.current-status"],
+                "generated": False,
+            }
+        )
+
+        errors = contracts.validate_payload("ssotProjection", fixture, manifest)
+
+        self.assertTrue(any("canonicalFor must be unique" in item for item in errors), errors)
+
+    def test_ssot_projectionで本文linkをdependency正本にできない(self) -> None:
+        manifest = contracts.load_manifest(ROOT)
+        fixture = json.loads(
+            (
+                ROOT
+                / "plugins/engineering-delivery/fixtures/valid/ssot-projection.json"
+            ).read_text(encoding="utf-8")
+        )["payload"]
+        relationship_source = next(
+            source
+            for source in fixture["sources"]
+            if "work-item.dependencies" in source["canonicalFor"]
+        )
+        relationship_source["sourceKind"] = "issue-body"
+
+        errors = contracts.validate_payload("ssotProjection", fixture, manifest)
+
+        self.assertTrue(
+            any("work-item.dependencies must use github-native-relationships" in item for item in errors),
+            errors,
+        )
+
+    def test_ssot_projectionでcurrent_statusをmerge前分類に流用できない(self) -> None:
+        manifest = contracts.load_manifest(ROOT)
+        fixture = json.loads(
+            (
+                ROOT
+                / "plugins/engineering-delivery/fixtures/valid/ssot-projection.json"
+            ).read_text(encoding="utf-8")
+        )["payload"]
+        fixture["projections"][0]["purpose"] = "pre-merge-classification"
+
+        errors = contracts.validate_payload("ssotProjection", fixture, manifest)
+
+        self.assertTrue(any("current-status cannot be pre-merge-classification" in item for item in errors), errors)
+
+    def test_templatesとskillsがProject現在値を本文へ複製しない(self) -> None:
+        plugin = ROOT / "plugins/engineering-delivery"
+        issue = (plugin / "templates/issue-contract.md").read_text(encoding="utf-8")
+        pull_request = (plugin / "templates/pr-evidence.md").read_text(encoding="utf-8")
+
+        self.assertIn("現在値はGitHub Projectを正本", issue)
+        self.assertNotIn("- Status: `Todo`", issue)
+        self.assertIn("Project Classification Snapshot", pull_request)
+        self.assertIn("Observed at:", pull_request)
+        for skill_name in ("issue-to-pr", "pr-self-review"):
+            skill = (
+                plugin / "skills" / skill_name / "SKILL.md"
+            ).read_text(encoding="utf-8")
+            self.assertIn("native Relationships", skill)
+            self.assertIn("observed_at", skill)
+
     def test_skill_promotion_policy_is_validated(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             candidate = Path(directory) / "marketplace"
@@ -448,15 +537,25 @@ class DeliveryContractTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             candidate = Path(directory) / "marketplace"
             shutil.copytree(ROOT, candidate, ignore=shutil.ignore_patterns(".git", "__pycache__"))
+            plugin_version = json.loads(
+                (
+                    ROOT
+                    / "plugins/engineering-delivery/.codex-plugin/plugin.json"
+                ).read_text(encoding="utf-8")
+            )["version"]
             changelog = candidate / "CHANGELOG.md"
             changelog.write_text(
-                changelog.read_text(encoding="utf-8").replace("[0.4.0]", "[removed]"),
+                changelog.read_text(encoding="utf-8").replace(
+                    f"[{plugin_version}]", "[removed]"
+                ),
                 encoding="utf-8",
             )
             compatibility = candidate / "docs/compatibility.md"
+            contract_version = contracts.load_manifest(ROOT)["contractVersion"]
             compatibility.write_text(
                 compatibility.read_text(encoding="utf-8").replace(
-                    "contract version `0.3.0`", "contract version is missing"
+                    f"contract version `{contract_version}`",
+                    "contract version is missing",
                 ),
                 encoding="utf-8",
             )

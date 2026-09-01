@@ -1,0 +1,64 @@
+{
+  "kind": "ssotProjection",
+  "payload": {
+    "contractId": "engineering-delivery-ssot-v1",
+    "sources": [
+      {
+        "sourceId": "delivery-project",
+        "sourceKind": "github-project",
+        "canonicalFor": [
+          "workflow.current-status",
+          "workflow.priority",
+          "workflow.goal-mode"
+        ],
+        "generated": false
+      },
+      {
+        "sourceId": "work-item",
+        "sourceKind": "github-issue",
+        "canonicalFor": ["work-item.specification"],
+        "generated": false
+      },
+      {
+        "sourceId": "work-item-relationships",
+        "sourceKind": "github-native-relationships",
+        "canonicalFor": ["work-item.dependencies"],
+        "generated": true
+      },
+      {
+        "sourceId": "versioned-artifact",
+        "sourceKind": "git-repository",
+        "canonicalFor": ["artifact.versioned-content"],
+        "generated": false
+      },
+      {
+        "sourceId": "pull-request-workflow",
+        "sourceKind": "pull-request-body",
+        "canonicalFor": ["pull-request.pre-merge-classification"],
+        "generated": false
+      }
+    ],
+    "projections": [
+      {
+        "projectionId": "issue-body-project-status",
+        "projectionOf": {
+          "sourceId": "delivery-project",
+          "fields": ["workflow.current-status"]
+        },
+        "purpose": "snapshot",
+        "observedAt": "2026-09-01T00:00:00Z",
+        "generated": false
+      },
+      {
+        "projectionId": "pull-request-classification",
+        "projectionOf": {
+          "sourceId": "pull-request-workflow",
+          "fields": ["pull-request.pre-merge-classification"]
+        },
+        "purpose": "pre-merge-classification",
+        "observedAt": "2026-09-01T00:00:00Z",
+        "generated": false
+      }
+    ]
+  }
+}

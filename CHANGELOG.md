@@ -4,6 +4,21 @@
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-09-01
+
+contract-digest: 34614ac71512dab0816b0f3c0be0b4ece382e56c9a867ae5bd78f0126c512c62
+
+### Added
+
+- 正本、投影元、観測時刻、generated状態を表す公開SSOT projection contract
+- Project current state、Issue specification、native Relationships、Git artifactの正本分離
+- 二重正本、本文dependency、観測時刻なしsnapshot、current statusのmerge前分類流用を拒否するvalidatorとfixture
+
+### Changed
+
+- canonical Issue / PR templateとdelivery skillsからmutableなProject現在値の複製を除去
+- PR本文のProject状態を`observed_at`付きmerge前classification snapshotへ変更
+
 ## [0.4.0] - 2026-09-01
 
 contract-digest: 3311d9e2bbe8fae5dcf0165f7536351609d3dde8cb2806eb370fb2e42cbb5985

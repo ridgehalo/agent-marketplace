@@ -1,6 +1,6 @@
 {
-  "contractVersion": "0.3.0",
-  "contractDigest": "3311d9e2bbe8fae5dcf0165f7536351609d3dde8cb2806eb370fb2e42cbb5985",
+  "contractVersion": "0.4.0",
+  "contractDigest": "34614ac71512dab0816b0f3c0be0b4ece382e56c9a867ae5bd78f0126c512c62",
   "gates": ["plan", "build", "verify", "release"],
   "riskRouting": {
     "low": {"reviewers": 0, "humanRequired": false},
@@ -52,6 +52,22 @@
       "ありません。外部状態が変わるまで待機します。"
     ],
     "standingAuthorizationRule": "live-read-back-and-operation-request-match"
+  },
+  "ssotProjection": {
+    "currentStateFields": [
+      "workflow.current-status",
+      "workflow.priority",
+      "workflow.goal-mode"
+    ],
+    "classificationField": "pull-request.pre-merge-classification",
+    "relationshipField": "work-item.dependencies",
+    "relationshipSourceKind": "github-native-relationships",
+    "projectionPurposes": ["snapshot", "pre-merge-classification"],
+    "requiredProjectionFields": [
+      "projectionOf",
+      "observedAt",
+      "generated"
+    ]
   },
   "templateContract": {
     "version": "1.0.0",
@@ -127,7 +143,8 @@
     "deliveryEvent": "contracts/schemas/delivery-event.schema.json",
     "deliveryManifest": "contracts/schemas/delivery-manifest.schema.json",
     "consumerProfile": "contracts/schemas/consumer-profile.schema.json",
-    "terminalReport": "contracts/schemas/terminal-report.schema.json"
+    "terminalReport": "contracts/schemas/terminal-report.schema.json",
+    "ssotProjection": "contracts/schemas/ssot-projection.schema.json"
   },
   "templates": {
     "issue": "templates/issue-contract.md",

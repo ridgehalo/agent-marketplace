@@ -4,6 +4,9 @@
 
 ## [Unreleased]
 
+- 対話中の開発に簡易Issue / PR形式と、必要な場合だけ人間アクションを示すガイドを追加
+- 機械的なterminalReportと通常の会話表示の適用範囲を分離。既存contract versionとpinは変更しない
+
 ## [0.5.0] - 2026-09-01
 
 contract-digest: 34614ac71512dab0816b0f3c0be0b4ece382e56c9a867ae5bd78f0126c512c62

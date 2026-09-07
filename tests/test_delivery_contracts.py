@@ -302,16 +302,12 @@ class DeliveryContractTest(unittest.TestCase):
                     [],
                 )
 
-    def test_終端報告skillが固定形式と再承認防止を要求する(self) -> None:
+    def test_対話報告は必須情報を保ち機械schemaと分ける(self) -> None:
         required_terms = (
-            "## あなたにお願いしたいアクション",
-            "対象",
-            "操作",
-            "理由",
-            "再開条件",
-            "任意の提案",
-            "standing authorization",
-            "live read-back",
+            "interactive-delivery.md",
+            "対象", "操作", "理由", "再開条件",
+            "必須操作と任意提案", "terminalReport", "固定schemaを維持",
+            "既承認の同じscopeを再承認へ戻さず",
         )
         for skill_name in ("issue-to-pr", "pr-self-review"):
             skill = (

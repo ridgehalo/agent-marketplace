@@ -160,3 +160,7 @@ repository validatorは拡張子に依存せず、release content内の全non-bi
 ## License
 
 Apache-2.0。詳細は `LICENSE` を参照してください。
+
+## 対話中の軽微な変更
+
+[対話中の開発ガイド](plugins/engineering-delivery/references/interactive-delivery.md)に従い、通常の会話と機械契約を分けます。意味・振る舞い・権限・運用を変えない修正には[簡易Issue](plugins/engineering-delivery/templates/compact-issue.md)と[簡易PR](plugins/engineering-delivery/templates/compact-pr.md)を使えます。詳細templateと、pin済みの機械schema・validatorは維持します。

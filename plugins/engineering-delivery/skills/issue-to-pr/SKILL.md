@@ -84,15 +84,11 @@ Issueを完全には満たさないPRで `Closes` を使わない。Project固�
 
 対象Issue、branch、commit、PR、実行した検証、未実行検証、relationship、残リスクを分けて報告する。PR作成に失敗した場合は、local成果を巻き戻さず、失敗した操作と再開方法を残す。
 
-## 終端報告
+## 対話中の作業と終端報告
 
-処理が完了または停止したときは、現在の状況を先に説明し、その後に固定見出し
-`## あなたにお願いしたいアクション`を必ず置く。
+[対話中の開発ガイド](../../references/interactive-delivery.md)に従い、必要な仕様・検証・記述形式を選ぶ。
+成果と検証結果を先に伝え、人間の対応が必要な場合だけ対象・操作・理由・再開条件を示す。
+対応不要の固定見出しや定型文は要求しない。必須操作と任意提案は区別する。
 
-- 必須Actionには`対象`、`操作`、`理由`、`再開条件`を含める。
-- `任意の提案`は必須Actionから分離する。
-- 操作がなければ`ありません。今回の処理は完了です。`または
-  `ありません。外部状態が変わるまで待機します。`と明記する。
-- 現在のsource stateをlive read-backし、standing authorizationとOperation Requestが
-  一致するroutine writeを新しい承認依頼へ戻さない。
-- merge、deploy、公開、課金、権限、secret利用など、未承認のHuman Gateだけを必須Actionにする。
+機械的な受け渡しに`terminalReport`を使う場合は、その固定schemaを維持する。
+既承認の同じscopeを再承認へ戻さず、公開・権限・secret・merge・deployの未承認操作は実行しない。

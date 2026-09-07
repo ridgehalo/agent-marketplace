@@ -41,3 +41,7 @@ version依存の高度なClaude marketplace機能は初期versionで使いませ
 7. secret scanと公開境界reviewを行う
 8. CHANGELOGを更新する
 9. tagを作成する
+
+## 対話表示と機械契約
+
+簡易templateと対話ガイドは、既存の機械schemaや公開validatorの置換ではありません。consumerは既存のmerge済みrevisionを維持し、利用repositoryの指示で通常対話への適用範囲を選べます。公開artifactの内容・digestを手修正して互換性を回避しません。

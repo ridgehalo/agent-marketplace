@@ -4,7 +4,9 @@
 
 このmarketplaceはagent skillを配布します。pluginは利用者権限で動作し得る高信頼コンポーネントとして扱ってください。
 
-初期 `engineering-delivery` pluginはskills-onlyであり、hooks、MCP servers、apps、認証情報、background processを含みません。
+`engineering-delivery` と `android-device-control` はskills-onlyであり、hooks、MCP servers、apps、認証情報、background processを含みません。`android-device-control` はアプリデバッグと明示的な端末操作に利用者環境のADBを呼び出しますが、ADB binary、端末driver、接続認証は配布しません。
+
+実機デバッグと端末操作では、接続中端末のserial、無関係なアプリのログ・画面・通知、顧客データ、アカウントや利用者識別子などを公開Issue、ログartifact、配布物へ保存しないでください。ログ取得は対象packageと再現時間へ限定します。ロック回避、credential抽出、保護されたアプリデータやDRMコンテンツの直接抽出は対象外です。購入、削除、アカウント切替、外部書き込み、permission・system setting変更は、対象と除外を示したHuman Gate後に限ります。
 
 ## 報告
 

@@ -28,6 +28,17 @@ Codexを主系として、複数リポジトリで再利用できるagent plugin
 
 初期versionはskills-onlyです。hooks、MCP servers、apps、外部認証、自動外部書き込みを含みません。
 
+### `android-device-control` 0.1.0
+
+- `android-app-debugging`: 開発・検証を許可したAndroidアプリを実機で再現し、ログや画面を照合して修正後まで確認する
+- `android-device-operations`: 利用者が明示した端末設定、画面操作、アカウント・データ移行などを公式UI経由で進める
+- 2つのskillでADB接続preflightとsetup referenceを共有する
+- 接続端末が0台、複数台、`unauthorized`、`offline`、指定serial不一致なら安全側に停止する
+- package/activity、UI階層、画面、設定値など、用途に応じた観測結果を操作後に読み戻す
+- buildのinstall・置換、app data削除、購入、削除、アカウント切替、権限・端末設定変更は事前承認を必須にする
+
+ADB本体、端末driver、認証情報、常駐processは同梱しません。iOS操作、端末ロック回避、credential抽出、保護されたアプリデータやDRMコンテンツの直接抽出には対応しません。個人固有のアカウント、端末、操作対象は利用側の依頼とpolicyで指定します。
+
 ## 導入
 
 まず、このリポジトリをcloneし、固定したtagまたはcommitへcheckoutします。
@@ -43,7 +54,7 @@ git checkout <approved-version-or-commit>
 ```bash
 python3 scripts/bootstrap.py install \
   --target all \
-  --plugin engineering-delivery \
+  --plugin android-device-control \
   --dry-run
 ```
 
@@ -52,7 +63,7 @@ python3 scripts/bootstrap.py install \
 ```bash
 python3 scripts/bootstrap.py install \
   --target all \
-  --plugin engineering-delivery
+  --plugin android-device-control
 ```
 
 Codex CLIを利用できないCodex Desktop環境では、bootstrapが表示するmarketplace deeplinkを開いてpluginを導入します。Claude CodeはCLIから登録・導入できます。
@@ -62,6 +73,8 @@ Codex CLIを利用できないCodex Desktop環境では、bootstrapが表示す�
 ```bash
 python3 scripts/bootstrap.py install --target codex --plugin engineering-delivery
 python3 scripts/bootstrap.py install --target claude --plugin engineering-delivery
+python3 scripts/bootstrap.py install --target codex --plugin android-device-control
+python3 scripts/bootstrap.py install --target claude --plugin android-device-control
 ```
 
 ## Read-back
@@ -71,6 +84,7 @@ APIやCLIの成功だけで完了とせず、導入先から状態を読み戻�
 ```bash
 python3 scripts/doctor.py --target all --plugin engineering-delivery
 python3 scripts/doctor.py --target all --plugin engineering-delivery --json
+python3 scripts/doctor.py --target all --plugin android-device-control --json
 ```
 
 `doctor` はsource manifestの整合、CLI可用性、marketplace登録元、plugin導入、version、enabled状態を別々に報告します。確認できない項目や、登録元が現在のsourceと異なる状態を成功扱いしません。
@@ -151,6 +165,7 @@ python3 scripts/contracts.py render-docs --check
 python3 -m unittest discover -s tests -v
 claude plugin validate .
 claude plugin validate plugins/engineering-delivery
+claude plugin validate plugins/android-device-control
 ```
 
 Codexは `.codex-plugin/plugin.json` と `.agents/plugins/marketplace.json` をvalidatorで検査し、実際のCodex Desktopで新しい会話から代表promptを確認します。

@@ -11,11 +11,14 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_SKILLS = {
-    "issue-to-pr",
-    "pr-self-review",
-    "loop-review",
-    "dev-experience-evidence",
+EXPECTED_PLUGINS = {
+    "engineering-delivery": {
+        "issue-to-pr",
+        "pr-self-review",
+        "loop-review",
+        "dev-experience-evidence",
+    },
+    "android-device-control": {"android-app-debugging", "android-device-operations"},
 }
 FORBIDDEN_TEXT = {
     "github.com/" + "users/": "user-specific GitHub Project URL",
@@ -92,62 +95,77 @@ def validate_repository(root: Path = ROOT) -> list[str]:
     try:
         codex_market = load_json(ROOT / ".agents/plugins/marketplace.json", errors)
         claude_market = load_json(ROOT / ".claude-plugin/marketplace.json", errors)
-        plugin_root = ROOT / "plugins/engineering-delivery"
-        codex_plugin = load_json(plugin_root / ".codex-plugin/plugin.json", errors)
-        claude_plugin = load_json(plugin_root / ".claude-plugin/plugin.json", errors)
-
-        manifests = [item for item in (codex_plugin, claude_plugin) if item is not None]
-        for index, manifest in enumerate(manifests):
-            require_fields(
-                manifest,
-                ("name", "version", "description", "author", "license"),
-                f"plugin manifest {index}",
-                errors,
+        plugin_versions: dict[str, str | None] = {}
+        for plugin_name in EXPECTED_PLUGINS:
+            plugin_root = ROOT / "plugins" / plugin_name
+            codex_plugin = load_json(plugin_root / ".codex-plugin/plugin.json", errors)
+            claude_plugin = load_json(plugin_root / ".claude-plugin/plugin.json", errors)
+            platform_manifests = (
+                ("Codex", codex_plugin),
+                ("Claude", claude_plugin),
             )
-            if manifest.get("name") != "engineering-delivery":
-                errors.append("plugin manifest name must be engineering-delivery")
-            if not SEMVER.fullmatch(str(manifest.get("version", ""))):
-                errors.append("plugin manifest version must be strict semver")
-            if manifest.get("license") != "Apache-2.0":
-                errors.append("plugin manifest license must be Apache-2.0")
-            author = manifest.get("author")
-            if not isinstance(author, dict) or not author.get("name"):
-                errors.append("plugin manifest author.name is required")
-            for forbidden in ("hooks", "mcpServers", "apps"):
-                if forbidden in manifest:
-                    errors.append(f"initial plugin must not declare {forbidden}")
+            manifests = [item for _, item in platform_manifests if item is not None]
+            for platform, manifest in platform_manifests:
+                if manifest is None:
+                    continue
+                label = f"{platform} plugin manifest {plugin_name}"
+                require_fields(
+                    manifest,
+                    ("name", "version", "description", "author", "license"),
+                    label,
+                    errors,
+                )
+                if manifest.get("name") != plugin_name:
+                    errors.append(f"plugin manifest name must be {plugin_name}")
+                if not SEMVER.fullmatch(str(manifest.get("version", ""))):
+                    errors.append(f"plugin manifest version must be strict semver: {plugin_name}")
+                if manifest.get("license") != "Apache-2.0":
+                    errors.append(f"plugin manifest license must be Apache-2.0: {plugin_name}")
+                author = manifest.get("author")
+                if not isinstance(author, dict) or not author.get("name"):
+                    errors.append(f"plugin manifest author.name is required: {plugin_name}")
+                for forbidden in ("hooks", "mcpServers", "apps"):
+                    if forbidden in manifest:
+                        errors.append(f"plugin must not declare {forbidden}: {plugin_name}")
 
-        versions = {str(item.get("version")) for item in manifests}
-        if len(versions) != 1:
-            errors.append(f"plugin manifest versions differ: {sorted(versions)}")
-        plugin_version = next(iter(versions), None)
+            versions = {str(item.get("version")) for item in manifests}
+            if len(versions) != 1:
+                errors.append(
+                    f"plugin manifest versions differ: {plugin_name}: {sorted(versions)}"
+                )
+            plugin_versions[plugin_name] = next(iter(versions), None)
 
         if codex_market is not None:
             require_fields(codex_market, ("name", "plugins"), "Codex marketplace", errors)
             if codex_market.get("name") != "ridgehalo":
                 errors.append("Codex marketplace name must be ridgehalo")
             entries = codex_market.get("plugins")
-            if not isinstance(entries, list) or len(entries) != 1:
-                errors.append("Codex marketplace must contain exactly one initial plugin")
+            if not isinstance(entries, list):
+                errors.append("Codex marketplace plugins must be an array")
             else:
-                entry = entries[0]
-                expected_source = {"source": "local", "path": "./plugins/engineering-delivery"}
-                if entry.get("name") != "engineering-delivery":
-                    errors.append("Codex marketplace plugin name mismatch")
-                if entry.get("source") != expected_source:
-                    errors.append("Codex marketplace source mismatch")
-                policy = entry.get("policy")
-                if not isinstance(policy, dict):
-                    errors.append("Codex marketplace entry missing policy")
-                else:
-                    require_fields(
-                        policy,
-                        ("installation", "authentication"),
-                        "Codex marketplace policy",
-                        errors,
-                    )
-                if not entry.get("category"):
-                    errors.append("Codex marketplace entry missing category")
+                names = {entry.get("name") for entry in entries if isinstance(entry, dict)}
+                if names != set(EXPECTED_PLUGINS) or len(entries) != len(EXPECTED_PLUGINS):
+                    errors.append(f"Codex marketplace plugin set mismatch: {sorted(str(name) for name in names)}")
+                for entry in entries:
+                    if not isinstance(entry, dict):
+                        errors.append("Codex marketplace plugin entry must be an object")
+                        continue
+                    name = entry.get("name")
+                    expected_source = {"source": "local", "path": f"./plugins/{name}"}
+                    if entry.get("source") != expected_source:
+                        errors.append(f"Codex marketplace source mismatch: {name}")
+                    policy = entry.get("policy")
+                    if not isinstance(policy, dict):
+                        errors.append(f"Codex marketplace entry missing policy: {name}")
+                    else:
+                        require_fields(
+                            policy,
+                            ("installation", "authentication"),
+                            f"Codex marketplace policy {name}",
+                            errors,
+                        )
+                    if not entry.get("category"):
+                        errors.append(f"Codex marketplace entry missing category: {name}")
 
         if claude_market is not None:
             require_fields(
@@ -159,36 +177,45 @@ def validate_repository(root: Path = ROOT) -> list[str]:
             if claude_market.get("name") != "ridgehalo":
                 errors.append("Claude marketplace name must be ridgehalo")
             entries = claude_market.get("plugins")
-            if not isinstance(entries, list) or len(entries) != 1:
-                errors.append("Claude marketplace must contain exactly one initial plugin")
+            if not isinstance(entries, list):
+                errors.append("Claude marketplace plugins must be an array")
             else:
-                entry = entries[0]
-                if entry.get("source") != "./plugins/engineering-delivery":
-                    errors.append("Claude marketplace source mismatch")
-                if str(entry.get("version")) != plugin_version:
-                    errors.append("Claude marketplace and plugin versions differ")
+                names = {entry.get("name") for entry in entries if isinstance(entry, dict)}
+                if names != set(EXPECTED_PLUGINS) or len(entries) != len(EXPECTED_PLUGINS):
+                    errors.append(f"Claude marketplace plugin set mismatch: {sorted(str(name) for name in names)}")
+                for entry in entries:
+                    if not isinstance(entry, dict):
+                        errors.append("Claude marketplace plugin entry must be an object")
+                        continue
+                    name = entry.get("name")
+                    if entry.get("source") != f"./plugins/{name}":
+                        errors.append(f"Claude marketplace source mismatch: {name}")
+                    if str(entry.get("version")) != plugin_versions.get(str(name)):
+                        errors.append(f"Claude marketplace and plugin versions differ: {name}")
 
-        skill_root = plugin_root / "skills"
-        actual_skills = {path.parent.name for path in skill_root.glob("*/SKILL.md")}
-        if actual_skills != EXPECTED_SKILLS:
-            errors.append(
-                f"skill set mismatch: expected={sorted(EXPECTED_SKILLS)} actual={sorted(actual_skills)}"
-            )
-        for skill_path in sorted(skill_root.glob("*/SKILL.md")):
-            metadata = frontmatter(skill_path, errors)
-            if metadata is None:
-                continue
-            folder = skill_path.parent.name
-            if metadata.get("name") != folder:
-                errors.append(f"skill name does not match folder: {skill_path.relative_to(ROOT)}")
-            description = metadata.get("description", "")
-            if len(description) < 40:
-                errors.append(f"skill description is not discriminating: {folder}")
-            text = skill_path.read_text(encoding="utf-8")
-            if "../../references/github-safety.md" in text and not (
-                plugin_root / "references/github-safety.md"
-            ).is_file():
-                errors.append(f"missing shared reference for skill: {folder}")
+        for plugin_name, expected_skills in EXPECTED_PLUGINS.items():
+            plugin_root = ROOT / "plugins" / plugin_name
+            skill_root = plugin_root / "skills"
+            actual_skills = {path.parent.name for path in skill_root.glob("*/SKILL.md")}
+            if actual_skills != expected_skills:
+                errors.append(
+                    f"skill set mismatch: {plugin_name}: expected={sorted(expected_skills)} actual={sorted(actual_skills)}"
+                )
+            for skill_path in sorted(skill_root.glob("*/SKILL.md")):
+                metadata = frontmatter(skill_path, errors)
+                if metadata is None:
+                    continue
+                folder = skill_path.parent.name
+                if metadata.get("name") != folder:
+                    errors.append(f"skill name does not match folder: {skill_path.relative_to(ROOT)}")
+                description = metadata.get("description", "")
+                if len(description) < 40:
+                    errors.append(f"skill description is not discriminating: {folder}")
+                text = skill_path.read_text(encoding="utf-8")
+                if "../../references/github-safety.md" in text and not (
+                    plugin_root / "references/github-safety.md"
+                ).is_file():
+                    errors.append(f"missing shared reference for skill: {folder}")
 
         ignored_parts = {".git", "validator-venv", "claude-config", "claude-config-full", "__pycache__", ".pycache"}
         for path in ROOT.rglob("*"):

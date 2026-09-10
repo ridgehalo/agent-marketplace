@@ -17,6 +17,10 @@ import bootstrap
 class BootstrapTest(unittest.TestCase):
     def test_default_plugin_is_selective(self) -> None:
         self.assertEqual(bootstrap.select_plugins(None), ["engineering-delivery"])
+        self.assertEqual(
+            bootstrap.select_plugins(["android-device-control"]),
+            ["android-device-control"],
+        )
         with self.assertRaises(bootstrap.BootstrapError):
             bootstrap.select_plugins(["unknown-plugin"])
 
@@ -52,8 +56,8 @@ class BootstrapTest(unittest.TestCase):
                     bootstrap.preflight_binaries(["codex", "claude"])
 
     def test_codex_deeplink_points_to_marketplace_manifest(self) -> None:
-        deeplink = bootstrap.codex_deeplink(ROOT, "engineering-delivery")
-        self.assertTrue(deeplink.startswith("codex://plugins/engineering-delivery?"))
+        deeplink = bootstrap.codex_deeplink(ROOT, "android-device-control")
+        self.assertTrue(deeplink.startswith("codex://plugins/android-device-control?"))
         self.assertIn("marketplace.json", deeplink)
 
     def test_command_output_redacts_tokens(self) -> None:

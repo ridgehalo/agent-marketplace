@@ -4,7 +4,7 @@
 
 ## [Unreleased]
 
-- ADB接続のfail-closed判定、変更前Human Gate、修正前後のread-backを備えたAndroidアプリ実機デバッグ用`android-device-control` pluginを追加
+- ADB接続のfail-closed判定と変更前Human Gateを共有し、`android-app-debugging`と`android-device-operations`を分離した`android-device-control` pluginを追加
 - Marketplace、bootstrap、doctor、validator、CIを複数plugin対応へ拡張
 - 対話中の開発に簡易Issue / PR形式と、必要な場合だけ人間アクションを示すガイドを追加
 - 機械的なterminalReportと通常の会話表示の適用範囲を分離。既存contract versionとpinは変更しない

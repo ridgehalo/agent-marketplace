@@ -25,7 +25,11 @@ def parse_devices(output: str) -> list[dict[str, Any]]:
 def select_device(
     devices: list[dict[str, Any]], serial: str | None
 ) -> tuple[bool, str | None, list[dict[str, Any]]]:
-    selected = [device for device in devices if device["serial"] == serial] if serial else devices
+    selected = (
+        [device for device in devices if device["serial"] == serial]
+        if serial
+        else devices
+    )
     if not selected:
         return False, "expected_device_not_found" if serial else "no_device", selected
     if len(selected) > 1:

@@ -1,19 +1,19 @@
 ---
-name: android-device-control
-description: Debug an Android application on a user-authorized physical device over ADB by reproducing issues, collecting scoped logs and UI evidence, controlling the app, and verifying fixes. Use for apps the user owns or is authorized to test; do not use for unrelated third-party apps, iOS, lock bypass, or credential extraction.
+name: android-app-debugging
+description: Debug an Android application on a user-authorized physical device over ADB by reproducing issues, collecting scoped logs and UI evidence, controlling the app, and verifying fixes. Use for apps the user owns or is authorized to test; do not use for general personal device workflows, iOS, lock bypass, or credential extraction.
 ---
 
-# Android Device Control
+# Android App Debugging
 
 Use ADB as a controlled debugging and UI automation channel for an application the user owns or is authorized to test. Prefer observable app behavior over direct edits to app storage.
 
 ## Before operating
 
-- When setup or connection troubleshooting is needed, read [references/setup.md](references/setup.md).
-- Run `scripts/adb_preflight.py`. Continue only with exactly one `device`-state target, or an explicitly selected serial. Stop on `unauthorized`, `offline`, multiple ambiguous devices, or a changed serial.
+- When setup or connection troubleshooting is needed, read [the shared setup reference](../../references/setup.md).
+- Run `../../scripts/adb_preflight.py`. Continue only with exactly one `device`-state target, or an explicitly selected serial. Stop on `unauthorized`, `offline`, multiple ambiguous devices, or a changed serial.
 - Read the project instructions and identify the intended build, package, launch activity, reproduction steps, expected behavior, and allowed device. Stop if the foreground package or build identity cannot be matched.
 - Keep logs and screenshots scoped to the target app. Do not print tokens, notification bodies, unrelated screen content, production customer data, or identifiers that are not needed for diagnosis.
-- Read-only inspection is safe to begin. Before installing or replacing a build, clearing app data, changing permissions or system settings, or operating outside the target app, present one named Human Gate with the exact scope. Approval covers only that scope.
+- Read-only inspection is safe to begin. Before installing or replacing a build, clearing app data, changing permissions or system settings, or operating outside the target app, present one named Human Gate with the exact target, change, exclusions, and reversibility. Approval covers only that scope.
 
 ## Operate and verify
 

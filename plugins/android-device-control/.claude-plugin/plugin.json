@@ -1,6 +1,6 @@
 {
   "name": "android-device-control",
-  "description": "Debug user-authorized Android applications on physical devices through ADB with reproducible evidence and explicit mutation gates.",
+  "description": "Debug Android applications and perform explicit user-authorized device workflows over ADB with reproducible evidence and mutation gates.",
   "version": "0.1.0",
   "author": {
     "name": "RidgeHalo",
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/ridgehalo/agent-marketplace",
   "repository": "https://github.com/ridgehalo/agent-marketplace",
   "license": "Apache-2.0",
-  "keywords": ["android", "adb", "device", "ui-automation", "debugging"]
+  "keywords": ["android", "adb", "device", "ui-automation", "debugging", "operations"]
 }

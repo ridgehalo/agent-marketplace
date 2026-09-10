@@ -18,7 +18,7 @@ EXPECTED_PLUGINS = {
         "loop-review",
         "dev-experience-evidence",
     },
-    "android-device-control": {"android-device-control"},
+    "android-device-control": {"android-app-debugging", "android-device-operations"},
 }
 FORBIDDEN_TEXT = {
     "github.com/" + "users/": "user-specific GitHub Project URL",

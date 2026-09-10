@@ -30,13 +30,14 @@ Codexを主系として、複数リポジトリで再利用できるagent plugin
 
 ### `android-device-control` 0.1.0
 
-- 利用者が開発・検証を許可したAndroidアプリを、USBデバッグ接続した実機上で再現・調査する
+- `android-app-debugging`: 開発・検証を許可したAndroidアプリを実機で再現し、ログや画面を照合して修正後まで確認する
+- `android-device-operations`: 利用者が明示した端末設定、画面操作、アカウント・データ移行などを公式UI経由で進める
+- 2つのskillでADB接続preflightとsetup referenceを共有する
 - 接続端末が0台、複数台、`unauthorized`、`offline`、指定serial不一致なら安全側に停止する
-- package/activity、対象build、logcat、UI階層、画面、process状態を組み合わせて原因を調査する
-- buildのinstall・置換、app data削除、権限・端末設定変更、対象アプリ外の操作は事前承認を必須にする
-- 同じ初期条件と再現手順で修正前後を比較し、実機上の結果を読み戻す
+- package/activity、UI階層、画面、設定値など、用途に応じた観測結果を操作後に読み戻す
+- buildのinstall・置換、app data削除、購入、削除、アカウント切替、権限・端末設定変更は事前承認を必須にする
 
-ADB本体、端末driver、認証情報、常駐processは同梱しません。無関係な第三者アプリ操作、iOS操作、端末ロック回避、credential抽出には対応しません。
+ADB本体、端末driver、認証情報、常駐processは同梱しません。iOS操作、端末ロック回避、credential抽出、保護されたアプリデータやDRMコンテンツの直接抽出には対応しません。個人固有のアカウント、端末、操作対象は利用側の依頼とpolicyで指定します。
 
 ## 導入
 

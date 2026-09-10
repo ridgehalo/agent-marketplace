@@ -16,7 +16,7 @@
     {
       "name": "android-device-control",
       "source": "./plugins/android-device-control",
-      "description": "Evidence-backed debugging of user-authorized Android applications on physical devices over ADB.",
+      "description": "Evidence-backed Android application debugging and user-authorized device operations over ADB.",
       "version": "0.1.0",
       "category": "development"
     }

@@ -36,7 +36,7 @@ adb shell pm clear APP_PACKAGE
 adb shell pm grant APP_PACKAGE ANDROID_PERMISSION
 ```
 
-Prefer a time-bounded or PID-scoped `logcat` capture around one reproduction. Do not retain unrelated application logs or production user data.
+Prefer a time-bounded or PID-scoped `logcat` capture around one reproduction. Do not retain unrelated application logs or production user data. For general device operations, collect logs only when they are necessary to verify the requested result.
 
 Optional keep-awake settings require approval before applying:
 

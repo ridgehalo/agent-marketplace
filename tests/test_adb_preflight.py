@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = (
     ROOT
-    / "plugins/android-device-control/skills/android-device-control/scripts/adb_preflight.py"
+    / "plugins/android-device-control/scripts/adb_preflight.py"
 )
 SPEC = importlib.util.spec_from_file_location("adb_preflight", MODULE_PATH)
 assert SPEC is not None and SPEC.loader is not None

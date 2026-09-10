@@ -1,7 +1,7 @@
 {
   "name": "android-device-control",
   "version": "0.1.0",
-  "description": "Debug user-authorized Android applications on physical devices through ADB with reproducible evidence and explicit mutation gates.",
+  "description": "Debug Android applications and perform explicit user-authorized device workflows over ADB with reproducible evidence and mutation gates.",
   "author": {
     "name": "RidgeHalo",
     "url": "https://github.com/ridgehalo"
@@ -9,19 +9,19 @@
   "homepage": "https://github.com/ridgehalo/agent-marketplace",
   "repository": "https://github.com/ridgehalo/agent-marketplace",
   "license": "Apache-2.0",
-  "keywords": ["android", "adb", "device", "ui-automation", "debugging"],
+  "keywords": ["android", "adb", "device", "ui-automation", "debugging", "operations"],
   "skills": "./skills/",
   "interface": {
     "displayName": "Android Device Control",
-    "shortDescription": "ADBでAndroidアプリを実機デバッグします。",
-    "longDescription": "開発・検証を許可されたAndroidアプリを実機で再現し、ADBによるログ、画面、UI階層、package状態の取得から修正後の再確認まで支援します。",
+    "shortDescription": "Androidアプリのデバッグと端末操作を安全に支援します。",
+    "longDescription": "開発中Androidアプリの実機デバッグと、利用者が明示した端末設定・アプリ操作・データ移行を、ADB接続確認、操作前承認、結果の読み戻し付きで支援します。",
     "developerName": "RidgeHalo",
     "category": "Productivity",
     "capabilities": ["Interactive", "Write"],
     "websiteURL": "https://github.com/ridgehalo/agent-marketplace",
     "defaultPrompt": [
       "開発中のAndroidアプリの不具合を実機で再現し、原因調査を手伝ってください。",
-      "接続中のAndroid端末でこのアプリを起動し、ログと画面状態を確認してください。"
+      "接続中のAndroid端末で、指定した設定変更やアプリ操作を結果確認まで進めてください。"
     ]
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "android-device-control",
-  "description": "Safely inspect and operate an authorized Android device through ADB with explicit mutation gates and read-back verification.",
+  "description": "Debug user-authorized Android applications on physical devices through ADB with reproducible evidence and explicit mutation gates.",
   "version": "0.1.0",
   "author": {
     "name": "RidgeHalo",

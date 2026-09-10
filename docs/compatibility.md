@@ -8,7 +8,7 @@
 | Codex CLI | `plugin marketplace add` / `plugin add` 対応version | `codex plugin list` read-back | CLIがある環境で確認 |
 | Claude Code | 2.1.149 | `plugin validate`、隔離configへのinstall、`plugin list --json`、`plugin details` | Gate前preflight済み |
 
-`android-device-control` はAndroid SDK Platform ToolsのADBと、USBデバッグを許可したAndroid端末を利用側で用意します。manifest、接続判定、失敗時停止はCIで検証しますが、端末・アプリ固有の画面操作は利用者環境でのread-backが必要です。iOSはADB非対応のため互換対象外です。
+`android-device-control` はAndroid SDK Platform ToolsのADB、USBデバッグを許可したAndroid端末、開発・検証を許可された対象アプリを利用側で用意します。manifest、接続判定、失敗時停止はCIで検証しますが、再現と修正後の実機確認は利用者環境でのread-backが必要です。iOSはADB非対応のため互換対象外です。
 
 public delivery contractはplatform CLIに依存せずPython標準ライブラリで検証・compileする。現在のcontract version `0.4.0`をconsumer profileでpinし、plugin versionとは別に`doctor --profile`で古いcontract pinを拒否する。
 

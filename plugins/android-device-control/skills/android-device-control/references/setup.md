@@ -16,15 +16,27 @@ Useful read-only commands:
 adb devices -l
 adb shell wm size
 adb shell dumpsys window | grep -E 'mCurrentFocus|mFocusedApp'
+adb shell dumpsys package APP_PACKAGE
+adb shell pidof APP_PACKAGE
+adb logcat --pid APP_PID
 adb shell uiautomator dump --compressed /sdcard/window.xml
 adb exec-out cat /sdcard/window.xml
 adb shell screencap -p /sdcard/screen.png
 adb pull /sdcard/screen.png ./screen.png
-adb shell dumpsys media_session
 adb shell dumpsys power
 ```
 
-Typical UI actions are `adb shell input tap X Y`, `swipe`, `text`, and `keyevent`. Treat them as writes when they change an app or account.
+Typical UI actions are `adb shell input tap X Y`, `swipe`, `text`, and `keyevent`. Treat them as writes when they change target application state.
+
+Installing a debug build, clearing application data, changing permissions, or resetting the application requires approval because it can replace or destroy device state:
+
+```sh
+adb install -r ./app-debug.apk
+adb shell pm clear APP_PACKAGE
+adb shell pm grant APP_PACKAGE ANDROID_PERMISSION
+```
+
+Prefer a time-bounded or PID-scoped `logcat` capture around one reproduction. Do not retain unrelated application logs or production user data.
 
 Optional keep-awake settings require approval before applying:
 

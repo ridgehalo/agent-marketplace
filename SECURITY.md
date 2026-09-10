@@ -6,7 +6,7 @@
 
 `engineering-delivery` と `android-device-control` はskills-onlyであり、hooks、MCP servers、apps、認証情報、background processを含みません。`android-device-control` は利用者環境のADBを明示的に呼び出しますが、ADB binary、端末driver、接続認証は配布しません。
 
-端末操作では、接続中端末のserial、画面、通知、アカウント識別子などを公開Issue、ログartifact、配布物へ保存しないでください。ロック回避、credential抽出、DRM回避、保護されたアプリデータの直接変更は対象外です。
+実機デバッグでは、接続中端末のserial、無関係なアプリのログ・画面・通知、顧客データ、利用者識別子などを公開Issue、ログartifact、配布物へ保存しないでください。ログ取得は対象packageと再現時間へ限定します。ロック回避、credential抽出、無関係な第三者アプリ操作は対象外です。
 
 ## 報告
 

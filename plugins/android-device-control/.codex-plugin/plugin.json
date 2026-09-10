@@ -1,0 +1,27 @@
+{
+  "name": "android-device-control",
+  "version": "0.1.0",
+  "description": "Safely inspect and operate an authorized Android device through ADB with explicit mutation gates and read-back verification.",
+  "author": {
+    "name": "RidgeHalo",
+    "url": "https://github.com/ridgehalo"
+  },
+  "homepage": "https://github.com/ridgehalo/agent-marketplace",
+  "repository": "https://github.com/ridgehalo/agent-marketplace",
+  "license": "Apache-2.0",
+  "keywords": ["android", "adb", "device", "ui-automation", "debugging"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Android Device Control",
+    "shortDescription": "ADBでAndroid実機を安全に操作・検証します。",
+    "longDescription": "USBデバッグ接続したAndroid実機をADBで調査・操作し、対象照合、変更前承認、変更後の読み戻しまで一貫して行います。",
+    "developerName": "RidgeHalo",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Write"],
+    "websiteURL": "https://github.com/ridgehalo/agent-marketplace",
+    "defaultPrompt": [
+      "接続中のAndroid端末を調査して、安全に操作してください。",
+      "Androidアプリの画面遷移を再現し、状態を読み戻してください。"
+    ]
+  }
+}

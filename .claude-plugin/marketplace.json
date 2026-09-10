@@ -12,6 +12,13 @@
       "description": "Portable delivery contracts, Issue-to-PR workflows, risk review, and evidence.",
       "version": "0.5.0",
       "category": "development"
+    },
+    {
+      "name": "android-device-control",
+      "source": "./plugins/android-device-control",
+      "description": "Safe, evidence-backed Android device inspection and UI operation over ADB.",
+      "version": "0.1.0",
+      "category": "development"
     }
   ]
 }

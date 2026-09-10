@@ -40,6 +40,26 @@ class ContractValidationTest(unittest.TestCase):
             errors = validate_repository(candidate)
             self.assertTrue(any("versions differ" in error for error in errors), errors)
 
+    def test_marketplace_plugin_set_drift_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            candidate = Path(directory) / "marketplace"
+            shutil.copytree(
+                ROOT,
+                candidate,
+                ignore=shutil.ignore_patterns(
+                    ".git", "validator-venv", "claude-config", "claude-config-full", "__pycache__"
+                ),
+            )
+            manifest_path = candidate / ".agents/plugins/marketplace.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["plugins"] = manifest["plugins"][:1]
+            manifest_path.write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            errors = validate_repository(candidate)
+            self.assertTrue(any("plugin set mismatch" in error for error in errors), errors)
+
     def test_local_absolute_path_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             candidate = Path(directory) / "marketplace"

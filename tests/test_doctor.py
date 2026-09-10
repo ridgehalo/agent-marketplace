@@ -24,7 +24,9 @@ class DoctorTest(unittest.TestCase):
         path.chmod(0o755)
 
     def test_source_contract_is_read_back(self) -> None:
-        results = doctor.source_checks(ROOT, ["engineering-delivery"])
+        results = doctor.source_checks(
+            ROOT, ["engineering-delivery", "android-device-control"]
+        )
         self.assertTrue(all(item["status"] == "pass" for item in results), results)
 
     def test_consumer_profile_pin_is_read_back(self) -> None:

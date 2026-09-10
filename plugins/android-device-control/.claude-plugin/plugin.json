@@ -1,0 +1,13 @@
+{
+  "name": "android-device-control",
+  "description": "Safely inspect and operate an authorized Android device through ADB with explicit mutation gates and read-back verification.",
+  "version": "0.1.0",
+  "author": {
+    "name": "RidgeHalo",
+    "url": "https://github.com/ridgehalo"
+  },
+  "homepage": "https://github.com/ridgehalo/agent-marketplace",
+  "repository": "https://github.com/ridgehalo/agent-marketplace",
+  "license": "Apache-2.0",
+  "keywords": ["android", "adb", "device", "ui-automation", "debugging"]
+}

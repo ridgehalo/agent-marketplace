@@ -8,6 +8,8 @@
 | Codex CLI | `plugin marketplace add` / `plugin add` 対応version | `codex plugin list` read-back | CLIがある環境で確認 |
 | Claude Code | 2.1.149 | `plugin validate`、隔離configへのinstall、`plugin list --json`、`plugin details` | Gate前preflight済み |
 
+`android-device-control` はAndroid SDK Platform ToolsのADBと、USBデバッグを許可したAndroid端末を利用側で用意します。manifest、接続判定、失敗時停止はCIで検証しますが、端末・アプリ固有の画面操作は利用者環境でのread-backが必要です。iOSはADB非対応のため互換対象外です。
+
 public delivery contractはplatform CLIに依存せずPython標準ライブラリで検証・compileする。現在のcontract version `0.4.0`をconsumer profileでpinし、plugin versionとは別に`doctor --profile`で古いcontract pinを拒否する。
 
 現在のcontract digest `34614ac71512dab0816b0f3c0be0b4ece382e56c9a867ae5bd78f0126c512c62`は、manifest、schema、template、validator / compilerの内容から決定する。consumer profileはこのdigestをpinし、変更時にdigest、generated docs、CHANGELOG、互換性宣言が揃わなければCIを失敗させる。
@@ -35,7 +37,7 @@ version依存の高度なClaude marketplace機能は初期versionで使いませ
 1. manifestsとmarketplace entryのversionを揃える
 2. `python3 scripts/validate.py` とunit testsを実行する
 3. `scripts/contracts.py validate` とgenerated docs checkを実行する
-4. Codex / Claude validatorを実行する
+4. Codex / Claude validatorを全pluginへ実行する
 5. clean cloneでbootstrapを実行する
 6. `doctor` で両targetとconsumer profileをread-backする
 7. secret scanと公開境界reviewを行う

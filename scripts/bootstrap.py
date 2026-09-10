@@ -16,7 +16,7 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_DIR = Path(__file__).resolve().parent
 MARKETPLACE = "ridgehalo"
-AVAILABLE_PLUGINS = {"engineering-delivery"}
+AVAILABLE_PLUGINS = {"android-device-control", "engineering-delivery"}
 SENSITIVE_OUTPUT = re.compile(
     r"(?i)(authorization:\s*bearer\s+|(?:access[_-]?)?token\s*[=:]\s*)\S+"
 )

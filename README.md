@@ -28,6 +28,16 @@ Codexを主系として、複数リポジトリで再利用できるagent plugin
 
 初期versionはskills-onlyです。hooks、MCP servers、apps、外部認証、自動外部書き込みを含みません。
 
+### `android-device-control` 0.1.0
+
+- USBデバッグ接続した、利用者が許可したAndroid端末をADBで調査・操作する
+- 接続端末が0台、複数台、`unauthorized`、`offline`、指定serial不一致なら安全側に停止する
+- UI階層、foreground app、画面、media sessionを組み合わせて対象を照合する
+- アカウント切替、購入、削除、権限・端末設定、第三者アプリへの書き込みは事前承認を必須にする
+- 操作後に画面・一覧・設定値を読み戻し、ボタン状態とクラウド反映を区別する
+
+ADB本体、端末driver、認証情報、常駐processは同梱しません。iOS操作、端末ロック回避、credential抽出、DRM回避、保護されたアプリデータの直接変更には対応しません。
+
 ## 導入
 
 まず、このリポジトリをcloneし、固定したtagまたはcommitへcheckoutします。
@@ -43,7 +53,7 @@ git checkout <approved-version-or-commit>
 ```bash
 python3 scripts/bootstrap.py install \
   --target all \
-  --plugin engineering-delivery \
+  --plugin android-device-control \
   --dry-run
 ```
 
@@ -52,7 +62,7 @@ python3 scripts/bootstrap.py install \
 ```bash
 python3 scripts/bootstrap.py install \
   --target all \
-  --plugin engineering-delivery
+  --plugin android-device-control
 ```
 
 Codex CLIを利用できないCodex Desktop環境では、bootstrapが表示するmarketplace deeplinkを開いてpluginを導入します。Claude CodeはCLIから登録・導入できます。
@@ -62,6 +72,8 @@ Codex CLIを利用できないCodex Desktop環境では、bootstrapが表示す�
 ```bash
 python3 scripts/bootstrap.py install --target codex --plugin engineering-delivery
 python3 scripts/bootstrap.py install --target claude --plugin engineering-delivery
+python3 scripts/bootstrap.py install --target codex --plugin android-device-control
+python3 scripts/bootstrap.py install --target claude --plugin android-device-control
 ```
 
 ## Read-back
@@ -71,6 +83,7 @@ APIやCLIの成功だけで完了とせず、導入先から状態を読み戻�
 ```bash
 python3 scripts/doctor.py --target all --plugin engineering-delivery
 python3 scripts/doctor.py --target all --plugin engineering-delivery --json
+python3 scripts/doctor.py --target all --plugin android-device-control --json
 ```
 
 `doctor` はsource manifestの整合、CLI可用性、marketplace登録元、plugin導入、version、enabled状態を別々に報告します。確認できない項目や、登録元が現在のsourceと異なる状態を成功扱いしません。
@@ -151,6 +164,7 @@ python3 scripts/contracts.py render-docs --check
 python3 -m unittest discover -s tests -v
 claude plugin validate .
 claude plugin validate plugins/engineering-delivery
+claude plugin validate plugins/android-device-control
 ```
 
 Codexは `.codex-plugin/plugin.json` と `.agents/plugins/marketplace.json` をvalidatorで検査し、実際のCodex Desktopで新しい会話から代表promptを確認します。

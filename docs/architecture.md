@@ -6,6 +6,7 @@
 flowchart TD
     M["ridgehalo/agent-marketplace\n公開配布の正本"]
     P["engineering-delivery\n共通skills実体"]
+    A["android-device-control\nADB操作の安全契約"]
     K["public contract\nschema / template / validator"]
     C["Codex manifest\n主系"]
     H["Claude Code manifest\n薄いadapter"]
@@ -13,9 +14,12 @@ flowchart TD
     R["RidgeHalo products\nproduct consumer"]
 
     M --> P
+    M --> A
     P --> K
     P --> C
     P --> H
+    A --> C
+    A --> H
     C --> U
     C --> R
     H --> U
@@ -40,6 +44,8 @@ flowchart TD
 
 hooks、MCP、subagents、認証、permission設定はskill本文へ埋め込まず、必要になった時点でplatform adapterとして設計します。追加前には権限、停止条件、rollbackをHuman Gateで確認します。
 
+`android-device-control` はADBを外部依存として呼び出すskills-only pluginです。ADB binary、端末driver、接続認証、常駐processを配布物へ含めず、端末の認可と接続状態は操作ごとにpreflightで確認します。
+
 ### contractとconsumer stateを分離する
 
 公開coreはschema、template、validator、compilerだけを提供します。personal / product consumerは同じcontract versionをpinしますが、profile、Project field、private state storeを共有しません。外部stateはsource revisionと観測時刻を持つread-only projectionとして解決します。
@@ -53,7 +59,8 @@ hooks、MCP、subagents、認証、permission設定はskill本文へ埋め込ま
 | 境界 | 規則 |
 | --- | --- |
 | marketplace登録 | catalogが見えるだけ。全pluginを暗黙に導入しない |
-| plugin導入 | skills-only。外部権限を付与しない |
+| plugin導入 | skills-only。外部権限や端末アクセスを付与しない |
+| Android端末 | 利用者が許可したADB接続だけを使い、曖昧な端末選択や未認可状態では停止する |
 | repo write | ユーザー依頼と対象repo policyの範囲に限定する |
 | external write | 実行前に対象と変更内容を確定し、実行後にread-backする |
 | public release | secret scan、manifest検証、clean clone検証後だけtagを作る |

@@ -35,3 +35,7 @@ hooks、MCP、外部認証、外部write、unattended executionを追加する�
 - install前にmanifestとskillを読む
 - `scripts/validate.py` と `scripts/doctor.py` を実行する
 - 外部commandを追加したpluginは、そのcommandの出所とversionも確認する
+
+## ローカルでのworkflow実行
+
+`workflow-local`は利用側のCIコードを読むため、信頼済みcommitと参照Actionを確認してから実行します。plugin自体はcredential、OIDC代替、配布先設定を持ちません。CIで許可される処理をローカルで無条件に許可するものではありません。workflowに記載された通知先への送信もユーザーの許可範囲で扱います。

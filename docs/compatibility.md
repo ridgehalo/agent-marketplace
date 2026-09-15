@@ -47,3 +47,7 @@ version依存の高度なClaude marketplace機能は初期versionで使いませ
 ## 対話表示と機械契約
 
 簡易templateと対話ガイドは、既存の機械schemaや公開validatorの置換ではありません。consumerは既存のmerge済みrevisionを維持し、利用repositoryの指示で通常対話への適用範囲を選べます。公開artifactの内容・digestを手修正して互換性を回避しません。
+
+## workflow-local
+
+engineering-delivery 0.6.0で追加。参照固定ツールはPython 3とGitを使用します。実行に必要なOS、shell、container、toolchain、認証は利用側workflowから解決します。GitHub Actionsの式やActionを自動実行するemulatorではありません。CI専用の認証・実行文脈しか持たないconsumerでは、ローカルadapterを用意するまで該当工程を実行できません。0.5.0へ戻す場合はplugin pinを戻せますが、利用側で実施した配布は取り消されません。

@@ -24,7 +24,7 @@ Issue本文から次を取り出す。
 - 要求ごとの検証証拠
 
 dependencyとparent / childはnative Relationshipsを正本とし、Issue本文のリンクだけで
-ready判定しない。`Status`、`Priority`、`Goal Mode`等のmutableなProject現在値は本文へ
+ready判定しない。`Status`、`Priority`、`Execution Order`等のmutableなProject現在値は本文へ
 複製せず、必要なsnapshotには投影元と`observed_at`を記録する。
 
 plugin内に `contracts/manifest.json` がある場合は、利用repositoryの規約を上書きせず、公開contract version、risk routing、Evidence typeを解決する。Issue、Plan、Test Intent、Reviewer、PR Evidenceの雛形は `templates/` を使い、consumer固有値を公開coreへ書き戻さない。
@@ -92,3 +92,10 @@ Issueを完全には満たさないPRで `Closes` を使わない。Project固�
 
 機械的な受け渡しに`terminalReport`を使う場合は、その固定schemaを維持する。
 既承認の同じscopeを再承認へ戻さず、公開・権限・secret・merge・deployの未承認操作は実行しない。
+
+## 開始条件の正本
+
+利用者が開発開始スキルを呼び出し、対象と操作範囲を承認した対話から実行する。
+製品側の開始スキルと最新のProject契約を読み、状態、順番、全体の確認待ち、依存と既存PRを確認する。
+公開contract 0.4.0のGoal Modeは旧consumer向け互換性の定義であり、現在の製品に定期実行やAutoを設定する指示ではない。
+製品がStatusで候補と保留を管理する場合は、その契約を優先する。pinやvalidatorを無断で書き換えない。

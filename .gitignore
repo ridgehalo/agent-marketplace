@@ -7,3 +7,5 @@ claude-config/
 claude-config-full/
 .coverage
 coverage.xml
+
+/tools/markdownlint/node_modules/

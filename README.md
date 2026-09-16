@@ -4,11 +4,11 @@ Codexを主系として、複数リポジトリで再利用できるagent plugin
 
 ## 所有境界
 
-| 場所 | 正本 |
-| --- | --- |
-| このリポジトリ | 公開可能な共通plugin、skill、bootstrap、doctor、互換性契約 |
-| 利用リポジトリ | 導入pluginとversion、組織・プロジェクト固有ポリシー |
-| 個人が所有するリポジトリ | 個人情報、価値判断、外部サービス認証、非公開workflow |
+| 場所                     | 正本                                                       |
+| ------------------------ | ---------------------------------------------------------- |
+| このリポジトリ           | 公開可能な共通plugin、skill、bootstrap、doctor、互換性契約 |
+| 利用リポジトリ           | 導入pluginとversion、組織・プロジェクト固有ポリシー        |
+| 個人が所有するリポジトリ | 個人情報、価値判断、外部サービス認証、非公開workflow       |
 
 公開pluginは自己完結し、利用リポジトリ外のファイル、絶対パス、secretを参照しません。リポジトリ固有の `AGENTS.md`、`CLAUDE.md`、contribution policyがある場合は、共通skillより具体的なadapterとして優先します。
 
@@ -179,3 +179,21 @@ Apache-2.0。詳細は `LICENSE` を参照してください。
 ## 対話中の軽微な変更
 
 [対話中の開発ガイド](plugins/engineering-delivery/references/interactive-delivery.md)に従い、通常の会話と機械契約を分けます。意味・振る舞い・権限・運用を変えない修正には[簡易Issue](plugins/engineering-delivery/templates/compact-issue.md)と[簡易PR](plugins/engineering-delivery/templates/compact-pr.md)を使えます。詳細templateと、pin済みの機械schema・validatorは維持します。
+
+## Markdownの検査
+
+全追跡Markdownを、CIとpre-pushで同じ固定版のMarkdownlintへ渡します。
+初回のclone後、次を実行してください。既存のpre-pushがある場合は上書きせず停止します。
+Lefthook管理のリポジトリでは既存の設定へ検査を追加しています。
+
+```sh
+npm ci --prefix tools/markdownlint --ignore-scripts
+node tools/markdownlint/install-hook.mjs
+node tools/markdownlint/check.mjs
+```
+
+検査失敗時は文書を直して再実行します。依存がない場合もpushを止めます。
+CIはPR全体で実行し、変更パスによる省略をしません。
+ルールの例外はMarkdownlint設定または該当箇所のコメントで理由を明記します。
+MarkdownlintはObsidian固有の描画や、すべての強調表示を保証しません。表示変更は実際の閲覧画面でも確認します。
+ローカルhookはGitの仕様上回避可能です。マージ阻止にはGitHub側で「Markdown lint」を必須チェックにする設定が別途必要です。

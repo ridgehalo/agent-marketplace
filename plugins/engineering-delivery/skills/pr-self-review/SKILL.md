@@ -38,7 +38,7 @@ repoの永続指示、linked Issue、PR本文、review comments、Issue comments
 7. PR本文の対応内容と検証結果が古ければ、許可されたGitHub writeとして更新してread-backする。
 8. findingがない場合も、確認した観点と証拠を明記する。
 
-Projectのcurrent `Status`、`Priority`、`Goal Mode`等をIssue / PR本文の古い値から推測しない。
+Projectのcurrent `Status`、`Priority`、`Execution Order`等をIssue / PR本文の古い値から推測しない。
 PR本文のmerge前classificationには投影元と`observed_at`があり、現在値の正本を名乗って
 いないことを確認する。
 

@@ -1,6 +1,6 @@
 {
   "name": "engineering-delivery",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Portable delivery contracts, Issue-to-PR workflows, risk review, and verifiable evidence.",
   "author": {
     "name": "RidgeHalo",
@@ -9,7 +9,13 @@
   "homepage": "https://github.com/ridgehalo/agent-marketplace",
   "repository": "https://github.com/ridgehalo/agent-marketplace",
   "license": "Apache-2.0",
-  "keywords": ["delivery", "github", "pull-request", "review", "evidence"],
+  "keywords": [
+    "delivery",
+    "github",
+    "pull-request",
+    "review",
+    "evidence"
+  ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Engineering Delivery",
@@ -17,12 +23,16 @@
     "longDescription": "公開contract、Issue-to-PR、PRセルフレビュー、追加精査、UI証跡取得を、consumer固有ポリシーを尊重しながら実行します。",
     "developerName": "RidgeHalo",
     "category": "Productivity",
-    "capabilities": ["Interactive", "Write"],
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
     "websiteURL": "https://github.com/ridgehalo/agent-marketplace",
     "defaultPrompt": [
       "このIssueを検証済みのPRまで進めてください。",
       "現在のPRをセルフレビューしてください。",
-      "このUI変更のDev体験証跡を取得してください。"
+      "このUI変更のDev体験証跡を取得してください。",
+      "CIのworkflowを参照して、同じ処理をローカルで実行してください。"
     ]
   }
 }

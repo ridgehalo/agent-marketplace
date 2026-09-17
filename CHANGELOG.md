@@ -4,10 +4,16 @@
 
 ## [Unreleased]
 
+
 - ADB接続のfail-closed判定と変更前Human Gateを共有し、`android-app-debugging`と`android-device-operations`を分離した`android-device-control` pluginを追加
 - Marketplace、bootstrap、doctor、validator、CIを複数plugin対応へ拡張
 - 対話中の開発に簡易Issue / PR形式と、必要な場合だけ人間アクションを示すガイドを追加
 - 機械的なterminalReportと通常の会話表示の適用範囲を分離。既存contract versionとpinは変更しない
+
+## [0.6.0] - 2026-09-16
+
+- CI参照型の`workflow-local`スキル、参照元snapshotと変更検出、利用側の認証・配布境界を追加
+- public contract versionとdigestは変更なし
 
 ## [0.5.0] - 2026-09-01
 

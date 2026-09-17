@@ -50,15 +50,16 @@ class DoctorTest(unittest.TestCase):
         self.assertIn("contractVersion must match", results[0]["detail"])
 
     def test_fake_platforms_are_read_back(self) -> None:
+        version = json.loads((ROOT / "plugins/engineering-delivery/.codex-plugin/plugin.json").read_text())["version"]
         with tempfile.TemporaryDirectory() as directory:
             bin_dir = Path(directory)
             self.make_cli(
                 bin_dir,
                 "codex",
-                """
+                f"""
                 import sys
                 if sys.argv[1:] == ["plugin", "list"]:
-                    print("engineering-delivery@ridgehalo 0.5.0")
+                    print("engineering-delivery@ridgehalo {version}")
                     raise SystemExit(0)
                 raise SystemExit(2)
                 """,
@@ -76,7 +77,7 @@ class DoctorTest(unittest.TestCase):
                 if args == ["plugin", "list", "--json"]:
                     print(json.dumps([{{
                         "id": "engineering-delivery@ridgehalo",
-                        "version": "0.5.0",
+                        "version": "{version}",
                         "scope": "user",
                         "enabled": True
                     }}]))

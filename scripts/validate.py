@@ -17,6 +17,7 @@ EXPECTED_PLUGINS = {
         "pr-self-review",
         "loop-review",
         "dev-experience-evidence",
+        "workflow-local",
     },
     "android-device-control": {"android-app-debugging", "android-device-operations"},
 }

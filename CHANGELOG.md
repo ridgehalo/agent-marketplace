@@ -4,7 +4,7 @@
 
 ## [Unreleased]
 
-- GitHub共通ガイドに、括弧内のコミットハッシュの半角スペースと明示リンクの書式例を追加
+- GitHub共通ガイドに、コミットハッシュの前後を必ず区切る規則と明示リンクの書式例を追加
 
 - ADB接続のfail-closed判定と変更前Human Gateを共有し、`android-app-debugging`と`android-device-operations`を分離した`android-device-control` pluginを追加
 - Marketplace、bootstrap、doctor、validator、CIを複数plugin対応へ拡張
